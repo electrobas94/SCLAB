@@ -1,0 +1,44 @@
+﻿
+<script>
+	 function AddTextureLoadItem()
+	 {
+	 	 let a = document.createElement("div");
+	 	 a.innerHTML = "<input class='form-control' type='file' name='textureFiles' />";
+	 	 document.getElementById("textureBox").appendChild(a);
+	 }
+
+	 function CancelLoadFiles()
+	 {
+	 	 $("#UploadFilesPanel").hide();
+	 }
+</script>
+
+<div class="col-lg-4 col-lg-offset-4" id="UploadFilesPanel">
+    <div class="panel panel-default">
+        <div class="panel-heading">Загрузка файлов модели</div>
+        <div class="panel-body">
+            @using ( Html.BeginForm( "UploadModelFiles", "ElementEditor", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
+				{
+            <div class="panel panel-default">
+                <label>Выбирите файл модели json</label>
+                <input class="form-control" type="file" name="modelFileJSON" />
+                <label>Выбирите файл модели bin</label>
+                <input class="form-control" type="file" name="modelFileBIN" />
+            </div>
+                    <label>
+                        Выбирите файлы текстур
+                        <button type="button" onclick="AddTextureLoadItem();">
+                            Add item
+                        </button>
+                    </label>
+                    <div id="textureBox" class="panel panel-default">
+                    </div>
+                    <div class="btn-group pull-right">
+                        <button type="submit">Начать загрузку</button>
+                        <button type="button" onclick="CancelLoadFiles();">Отмена</button>
+                    </div>
+				}
+        </div>
+    </div>
+</div>
+
