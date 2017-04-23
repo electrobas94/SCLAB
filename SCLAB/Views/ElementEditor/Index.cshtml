@@ -3,8 +3,8 @@
 	 ViewBag.Title = "Index";
 }
 .
-<div class="row">
-    <div class="col-lg-10 col-lg-offset-1" id="ElementEditorPanel">
+<div class="row" ng-app="ElementEditor">
+    <div class="col-lg-10 col-lg-offset-1" id="ElementEditorPanel" ng-controller="ElementEditorController as ElementEditor">
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row">
@@ -59,7 +59,7 @@
                                     <button type="button" class="list-group-item">Dapibus ac facilisis in</button>
                                 </div>
 										  <div class="btn-group pull-right">
-												<button class="btn btn-default">Add mesh</button>
+												<button class="btn btn-default" ng-click="ElementEditor.AddMesh()">Add mesh</button>
 												<button class="btn btn-default">DeleteMesh</button>
 										  </div>
                             </div>
@@ -72,3 +72,5 @@
 </div>
 
 @Html.Partial( "MeshLoadPanel" )
+
+@Scripts.Render( "~/bundles/ElementEditor" )
