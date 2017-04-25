@@ -1,44 +1,86 @@
 ﻿
-<script>
-	 function AddTextureLoadItem()
-	 {
-	 	 let a = document.createElement("div");
-	 	 a.innerHTML = "<input class='form-control' type='file' name='textureFiles' />";
-	 	 document.getElementById("textureBox").appendChild(a);
-	 }
-
-	 function CancelLoadFiles()
-	 {
-	 	 $("#UploadFilesPanel").hide();
-	 }
-</script>
-
-<div class="col-lg-4 col-lg-offset-4" id="UploadFilesPanel">
-    <div class="panel panel-default">
-        <div class="panel-heading">Загрузка файлов модели</div>
-        <div class="panel-body">
-            @using ( Html.BeginForm( "UploadModelFiles", "ElementEditor", FormMethod.Post, new { enctype = "multipart/form-data" } ) )
-				{
-            <div class="panel panel-default">
-                <label>Выбирите файл модели json</label>
-                <input class="form-control" type="file" name="modelFileJSON" />
-                <label>Выбирите файл модели bin</label>
-                <input class="form-control" type="file" name="modelFileBIN" />
+<div class="row" ng-show="ui.showMeshUploadPanel" id="UploadFilesPanel">
+    <div class="col-lg-10 col-lg-offset-1">
+        <div class="panel panel-default">
+            <div class="panel-heading"  style="padding:5px;">
+                <span class="panel-title" style="display:inline-block">Upload file dialog
+					</span>
+                <div style="display:inline-block" class="btn-group pull-right">
+                    <button class="btn btn-danger" ng-click="ui.showMeshUploadPanel = false;"><span class="glyphicon glyphicon-remove"></span></button>
+                </div>
+				</div>
+            <div class="panel-body">
+                <div ng-controller="MeshLoaderController"
+                     nv-file-drop=""
+                     uploader="uploader"
+                     filters="queueLimit, customFilter"
+                     id="UploadFilesPanel">
+                    <div class="col-md-3">
+                        <h3>Select model files</h3>
+                        <div ng-show="uploader.isHTML5">
+                            <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                            <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
+                                Please drag file of model (Json, bin and textures)
+                            </div>
+                        </div>
+                        Or we can to select files using dialog window
+                        <input type="file" nv-file-select="" uploader="uploader" multiple /><br />
+                    </div>
+                    <div class="col-md-9" style="margin-bottom: 40px">
+                        <h3>Upload queue</h3>
+                        <p>Queue length: {{ uploader.queue.length }}</p>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th width="50%">Name</th>
+                                    <th ng-show="uploader.isHTML5">Size</th>
+                                    <th ng-show="uploader.isHTML5">Progress</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="item in uploader.queue">
+                                    <td><strong>{{ item.file.name }}</strong></td>
+                                    <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
+                                    <td ng-show="uploader.isHTML5">
+                                        <div class="progress" style="margin-bottom: 0;">
+                                            <div class="progress-bar" role="progressbar" ng-style="{ 'width': item.progress + '%' }"></div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">
+                                        <span ng-show="item.isSuccess"><i class="glyphicon glyphicon-ok"></i></span>
+                                        <span ng-show="item.isCancel"><i class="glyphicon glyphicon-ban-circle"></i></span>
+                                        <span ng-show="item.isError"><i class="glyphicon glyphicon-remove"></i></span>
+                                    </td>
+                                    <td nowrap>
+                                        <button type="button" class="btn btn-danger btn-xs" ng-click="item.remove()">
+                                            <span class="glyphicon glyphicon-trash"></span> Remove
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div>
+                            <div>
+                                Queue progress:
+                                <div class="progress" style="">
+                                    <div class="progress-bar" role="progressbar" ng-style="{ 'width': uploader.progress + '%' }"></div>
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-success btn-s" ng-click="StartUploading()" ng-disabled="!uploader.getNotUploadedItems().length">
+                                <span class="glyphicon glyphicon-upload"></span> Upload all
+                            </button>
+                            <button type="button" class="btn btn-warning btn-s" ng-click="uploader.cancelAll()" ng-disabled="!uploader.isUploading">
+                                <span class="glyphicon glyphicon-ban-circle"></span> Cancel all
+                            </button>
+                            <button type="button" class="btn btn-danger btn-s" ng-click="uploader.clearQueue()" ng-disabled="!uploader.queue.length">
+                                <span class="glyphicon glyphicon-trash"></span> Remove all
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
-                    <label>
-                        Выбирите файлы текстур
-                        <button type="button" onclick="AddTextureLoadItem();">
-                            Add item
-                        </button>
-                    </label>
-                    <div id="textureBox" class="panel panel-default">
-                    </div>
-                    <div class="btn-group pull-right">
-                        <button type="submit">Начать загрузку</button>
-                        <button type="button" onclick="CancelLoadFiles();">Отмена</button>
-                    </div>
-				}
         </div>
     </div>
 </div>
-

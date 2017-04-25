@@ -10,44 +10,60 @@ namespace SCLAB.Services
 {
 	 public class MeshFilesUploadService
 	 {
+		  private static MeshFilesUploadService instance;
+
 		  private IRepository<MeshModel> _MeshRepository;
-		  
-		  /// <summary>
-		  /// Saving file in loacal chaash and add note in data base
-		  /// </summary>
-		  /// <param name="mesh"></param>
-		  /// <param name="serverDirectory"></param>
-		  /// <returns>Return id</returns>
-		  public int SaveUploadedMeshFiles(MeshUploadFilesModel mesh, string serverDirectory)
+
+		  public static MeshFilesUploadService GetMeshFilesUploader()
 		  {
-				if ( mesh.ModelFileJSON == null || mesh.ModelFileBIN == null )
-				{
-					 new Exception( "Empty main files of mesh" );
-					 return -1;
-				}
-
-				string newModelDirectory = Guid.NewGuid().ToString();
-
-				Directory.CreateDirectory( serverDirectory + newModelDirectory );
-
-
-				mesh.ModelFileJSON.SaveFileInDirectory( serverDirectory + newModelDirectory );
-				mesh.ModelFileBIN.SaveFileInDirectory ( serverDirectory + newModelDirectory );
-
-
-				foreach ( var textureFile in mesh.ModelTextureFiles )
-				{
-					 if ( textureFile != null )
-						  textureFile.SaveFileInDirectory( serverDirectory + newModelDirectory );
-				}
-
-				return _MeshRepository.AddNewElement( new MeshModel( serverDirectory + newModelDirectory ) );
+				if ( instance == null )
+					 instance = new MeshFilesUploadService();
+				return instance;
 		  }
 
-		  public MeshFilesUploadService()
+		  public string ServerDirectory { set; get; }
+
+		  private string _ActiveDirectory { get; set; }
+		  private string _currentState;
+
+		  public void StartFileUpload( string userName )
+		  {
+				if ( _currentState != "wait" )
+					 CancelFileUpload(null);
+
+				string folderName = Guid.NewGuid().ToString();
+				_ActiveDirectory = folderName;
+
+				Directory.CreateDirectory( ServerDirectory + _ActiveDirectory );
+		  }
+
+		  public void CancelFileUpload( string userName )
+		  {
+				_currentState = "wait";
+		  }
+
+		  public void FileSave( HttpPostedFileBase file )
+		  {
+				if ( _ActiveDirectory != "" )
+				{
+					 string fileName = System.IO.Path.GetFileName( file.FileName );
+
+					 file.SaveAs(ServerDirectory + _ActiveDirectory + "/" + fileName );
+				}
+		  }
+
+		  public int FinishFileUpload( string userName )
+		  {
+				_currentState = "wait";
+
+				return _MeshRepository.AddNewElement( new MeshModel( ServerDirectory + _ActiveDirectory ) );
+		  }
+
+		  private MeshFilesUploadService( )
 		  {
 				_MeshRepository = new MeshRepository();
 		  }
+
 
 	 }//class end
 }

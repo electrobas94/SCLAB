@@ -7,7 +7,7 @@ using System.IO;
 
 namespace SCLAB.Controllers
 {
-    public class ElementEditorController : Controller
+	 public class ElementEditorController : Controller
     {
 		  private Services.MeshFilesUploadService _MeshUploader;
 
@@ -18,18 +18,33 @@ namespace SCLAB.Controllers
         }
 
 		  [HttpPost]
-		  public ActionResult UploadModelFiles( HttpPostedFileBase modelFileJSON, HttpPostedFileBase modelFileBIN, IEnumerable<HttpPostedFileBase> textureFiles )
+		  public ActionResult UploadModelFile( HttpPostedFileBase file )
 		  {
-				var mesh4Upload = new Models.MeshUploadFilesModel( modelFileJSON, modelFileBIN, textureFiles);
+				_MeshUploader.FileSave( file );
+				return Content("Ok");
+		  }
 
-				_MeshUploader.SaveUploadedMeshFiles( mesh4Upload, Server.MapPath( "~/UsersData/Models3d/") );
-				 
-				return RedirectToAction( "Index" );
+		  [HttpGet]
+		  public ActionResult UploadModelFilesStart()
+		  {
+				_MeshUploader.ServerDirectory = Server.MapPath( "/UsersData/Models3d/" );
+				_MeshUploader.StartFileUpload( "username" );
+				return Content( "Ok" );
+		  }
+
+		  public ActionResult UploadModelFilesFinish( bool isSuccess )
+		  {
+				if ( isSuccess )
+					 _MeshUploader.FinishFileUpload( "username" );
+				else
+					 _MeshUploader.CancelFileUpload( "username" );
+
+				return Content( "Ok" );
 		  }
 
 		  public ElementEditorController()
 		  {
-				_MeshUploader = new Services.MeshFilesUploadService();
+				_MeshUploader = Services.MeshFilesUploadService.GetMeshFilesUploader();
 		  }
 	 }
 }

@@ -15,10 +15,12 @@ namespace SCLAB
 								"~/Scripts/jquery.validate*" ) );
 
 				bundles.Add( new ScriptBundle( "~/bundles/angular" ).Include(
-				"~/Scripts/angular.min.js" ) );
+				"~/Scripts/angular.min.js",
+				"~/Scripts/angular-file-upload.min.js" ) );
 
 				bundles.Add( new ScriptBundle( "~/bundles/ElementEditor" ).Include(
-					 "~/WebScripts/ElementEditor.js" ) );
+					"~/WebScripts/MeshFileLoader.js",
+					"~/WebScripts/ElementEditor.js" ) );
 
 				
 
@@ -33,7 +35,7 @@ namespace SCLAB
 
 				bundles.Add( new StyleBundle( "~/Content/css" ).Include(
 							 "~/Content/bootstrap.css",
-							 "~/Content/ElementEditor.css",
+							"~/Content/ElementEditor.css",
 							 "~/Content/site.css" ) );	
 		  }
 	 }

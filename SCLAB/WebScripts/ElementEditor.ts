@@ -1,25 +1,10 @@
-﻿
-class ElementEditor
+﻿class ElementEditor
 {
-	 private _ElementEditor: ng.IModule;
+	 private _MeshFileLoader: MeshFileLoader;
 
-	 private AddNewMesh(): void
-	 {
-		  console.log('bebebe');
-	 }
-
-	 constructor()
-	 {
-		  this._ElementEditor = angular.module('ElementEditor', []);
-
-		  let scope = this;
-
-		  this._ElementEditor.controller("ElementEditorController", function ()
-		  {
-				let sc = this;
-				sc.AddMesh = () => { scope.AddNewMesh() };
-		  });
+	 constructor() {
+		  this._MeshFileLoader = new MeshFileLoader()
 	 }
 }
 
-var _elementEditor = new ElementEditor();
+var _ElementEditor = new ElementEditor();
