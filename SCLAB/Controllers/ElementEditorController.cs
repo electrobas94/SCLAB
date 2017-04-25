@@ -34,12 +34,14 @@ namespace SCLAB.Controllers
 
 		  public ActionResult UploadModelFilesFinish( bool isSuccess )
 		  {
+				string responceData = "";
+
 				if ( isSuccess )
-					 _MeshUploader.FinishFileUpload( "username" );
+					 responceData = _MeshUploader.FinishFileUpload( "username" );
 				else
 					 _MeshUploader.CancelFileUpload( "username" );
 
-				return Content( "Ok" );
+				return Content( responceData );
 		  }
 
 		  public ElementEditorController()

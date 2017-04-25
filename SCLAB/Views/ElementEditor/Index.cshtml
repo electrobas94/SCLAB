@@ -5,7 +5,7 @@
 .
 
 
-<div class="row" ng-app="ElementEditor">
+<div class="row" ng-app="ElementEditor" ng-controller="MeshLoaderController">
 @Html.Partial( "MeshLoadPanel" )
     <div class="col-lg-10 col-lg-offset-1" id="ElementEditorPanel">
         <div class="panel panel-default">
@@ -29,7 +29,7 @@
                     </div>
                <div class="col-lg-6">
                    <div class="panel panel-default">
-                       <div class="panel-heading">ELement editor</div>
+                       <div class="panel-heading">Element editor</div>
                        <div class="panel-body">
                        </div>
                    </div>
@@ -37,7 +37,7 @@
                </div>
                 <div class="row">
                     <div class="col-lg-6">
-                        <div class="row">
+                        
                             <div class="panel panel-default">
                                 <div class="panel-heading">Animation key</div>
                                 <div class="panel-body">
@@ -51,7 +51,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        
                     </div>
                     <div class="col-lg-6">
 								@Html.Partial( "MeshListPanel" )

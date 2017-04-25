@@ -1,5 +1,6 @@
 var MeshFileLoaderUI = (function () {
     function MeshFileLoaderUI() {
+        this.MeshList = [];
         this.showMeshUploadPanel = false;
     }
     return MeshFileLoaderUI;
@@ -50,7 +51,14 @@ var MeshFileLoader = (function () {
         });
     };
     MeshFileLoader.prototype.CompleteUploadFiles = function (isSuccess) {
-        this._HttpService.get("/ElementEditor/UploadModelFilesFinish?isSuccess=" + isSuccess);
+        var _this = this;
+        this._HttpService.get("/ElementEditor/UploadModelFilesFinish?isSuccess=" + isSuccess).then(function (response) {
+            var str = response.data;
+            if (str != "") {
+                var strList = str.split('/');
+                _this._MeshFileLoaderUI.MeshList.push(strList[strList.length - 1]);
+            }
+        });
     };
     return MeshFileLoader;
 }());

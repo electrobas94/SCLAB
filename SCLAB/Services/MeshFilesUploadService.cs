@@ -14,6 +14,8 @@ namespace SCLAB.Services
 
 		  private IRepository<MeshModel> _MeshRepository;
 
+		  private string _JsonFile { get; set; }
+
 		  public static MeshFilesUploadService GetMeshFilesUploader()
 		  {
 				if ( instance == null )
@@ -30,6 +32,8 @@ namespace SCLAB.Services
 		  {
 				if ( _currentState != "wait" )
 					 CancelFileUpload(null);
+
+				_JsonFile = "";
 
 				string folderName = Guid.NewGuid().ToString();
 				_ActiveDirectory = folderName;
@@ -49,14 +53,23 @@ namespace SCLAB.Services
 					 string fileName = System.IO.Path.GetFileName( file.FileName );
 
 					 file.SaveAs(ServerDirectory + _ActiveDirectory + "/" + fileName );
+
+					 if ( fileName.Split( '.' )[ 1 ].ToLower() == "json" )
+						  _JsonFile = fileName;
 				}
 		  }
 
-		  public int FinishFileUpload( string userName )
+		  public string FinishFileUpload( string userName )
 		  {
 				_currentState = "wait";
 
-				return _MeshRepository.AddNewElement( new MeshModel( ServerDirectory + _ActiveDirectory ) );
+				if ( _JsonFile != "" )
+				{
+					 _MeshRepository.AddNewElement( new MeshModel( ServerDirectory + _ActiveDirectory ) );
+					 return "/UsersData/Models3d/" + _ActiveDirectory + '/'+ _JsonFile;
+				}
+
+				return "";
 		  }
 
 		  private MeshFilesUploadService( )

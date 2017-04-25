@@ -1,9 +1,11 @@
 ﻿class MeshFileLoaderUI
 {
 	 public showMeshUploadPanel: boolean;
+	 public MeshList: Array<string>;
 
 	 constructor()
 	 {
+		  this.MeshList = [];
 		  this.showMeshUploadPanel = false;
 	 }
 }
@@ -14,7 +16,7 @@ class MeshFileLoader {
 	 private _FileUploader: any;
 	 private _HttpService: ng.IHttpService;
 
-	 private _MeshFileLoaderUI;
+	 private _MeshFileLoaderUI: MeshFileLoaderUI;
 
 
 	 public StartUploading(): void
@@ -28,7 +30,15 @@ class MeshFileLoader {
 
 	 private CompleteUploadFiles(isSuccess: boolean): void
 	 {
-		  this._HttpService.get("/ElementEditor/UploadModelFilesFinish?isSuccess=" + isSuccess);
+		  let _this = this;
+		  this._HttpService.get("/ElementEditor/UploadModelFilesFinish?isSuccess=" + isSuccess).then((response: any) => {
+				let str: string = response.data;
+
+				if (str != "") {
+					 let strList: string[] = str.split('/');
+					 _this._MeshFileLoaderUI.MeshList.push(strList[strList.length - 1]);
+				}
+		  });
 	 }
 
 	 constructor()
@@ -36,7 +46,7 @@ class MeshFileLoader {
 		  let _this = this;
 		  this._MeshFileLoaderModule = angular.module('ElementEditor', ['angularFileUpload']);
 
-		  _this._MeshFileLoaderModule.controller("MeshLoaderController", ['$scope', '$http', 'FileUploader', function ($scope: ng.IScope, $http: ng.IHttpService, FileUploader: any) {
+		  _this._MeshFileLoaderModule.controller("MeshLoaderController", ['$scope', '$http', 'FileUploader', function ($scope: any, $http: ng.IHttpService, FileUploader: any) {
 
 				// set def value
 				$scope.StartUploading = () => { _this.StartUploading() };
