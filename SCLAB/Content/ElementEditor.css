@@ -55,6 +55,48 @@
 	background-color: #dff0d8;
 	border-color: #d6e9c6;
 }
-#alertUpload {
-	display:none;
+.my-drop-zone {
+    background-image: url(images/download.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    height: 199px;
+    text-align:center;
+
+    animation: animBackground 1s infinite alternate; 
+}
+@keyframes animBackground { 
+    from {
+        background-size: 60%; 
+    }
+
+    to {
+        background-size: 20%; 
+    }
+}
+
+.my-drop-zone:hover {
+    animation:none;
+    background-size: 40%;
+}
+#UploadFilesPanel > div.col-md-9 > div.alert.alert-warning.fade.in{
+    padding-top:15px;
+}
+.trFile {
+    animation: animTrFile 1s 1 alternate;
+}
+@keyframes animTrFile {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+
+#CanvasElementEditor > canvas {
+    top:1px!important;
+    left: 16px!important;
+    border-radius:3px;
 }

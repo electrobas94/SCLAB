@@ -6,7 +6,8 @@ var MeshFileLoaderUI = (function () {
     return MeshFileLoaderUI;
 }());
 var MeshFileLoader = (function () {
-    function MeshFileLoader() {
+    function MeshFileLoader(renderPreview) {
+        this._RenderPreview = renderPreview;
         var _this = this;
         this._MeshFileLoaderModule = angular.module('ElementEditor', ['angularFileUpload']);
         _this._MeshFileLoaderModule.controller("MeshLoaderController", ['$scope', '$http', 'FileUploader', function ($scope, $http, FileUploader) {
@@ -57,6 +58,7 @@ var MeshFileLoader = (function () {
             if (str != "") {
                 var strList = str.split('/');
                 _this._MeshFileLoaderUI.MeshList.push(strList[strList.length - 1]);
+                _this._RenderPreview._RenderEngineService.appendMeshIn(str);
             }
         });
     };

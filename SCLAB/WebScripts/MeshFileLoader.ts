@@ -12,6 +12,9 @@
 
 
 class MeshFileLoader {
+
+	 private _RenderPreview: RenderPreview;
+
 	 private _MeshFileLoaderModule: angular.IModule;
 	 private _FileUploader: any;
 	 private _HttpService: ng.IHttpService;
@@ -37,12 +40,16 @@ class MeshFileLoader {
 				if (str != "") {
 					 let strList: string[] = str.split('/');
 					 _this._MeshFileLoaderUI.MeshList.push(strList[strList.length - 1]);
+
+					 _this._RenderPreview._RenderEngineService.appendMeshIn( str );
 				}
 		  });
 	 }
 
-	 constructor()
+	 constructor( renderPreview:RenderPreview)
 	 {
+		  this._RenderPreview = renderPreview;
+
 		  let _this = this;
 		  this._MeshFileLoaderModule = angular.module('ElementEditor', ['angularFileUpload']);
 

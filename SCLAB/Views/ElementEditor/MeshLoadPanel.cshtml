@@ -18,16 +18,22 @@
                         <h3>Select model files</h3>
                         <div ng-show="uploader.isHTML5">
                             <!-- 3. nv-file-over uploader="link" over-class="className" -->
+                            
                             <div class="well my-drop-zone" nv-file-over="" uploader="uploader">
-                                Please drag file of model (Json, bin and textures)
+                                <p style="font-size:20px">Drag here</p>
                             </div>
                         </div>
-                        Or we can to select files using dialog window
-                        <input type="file" nv-file-select="" uploader="uploader" multiple /><br />
+                        
+                        <button style="width:100%" type="button" class="btn btn-info" onclick="$('#uploadFileInput').trigger('click')" >Select files</button>
+                        <input style="display:none" id="uploadFileInput" type="file" nv-file-select="" uploader="uploader" multiple /><br />
                     </div>
                     <div class="col-md-9" style="margin-bottom: 40px">
                         <h3>Upload queue</h3>
-                        <p>Queue length: {{ uploader.queue.length }}</p>
+                        <div class="alert alert-danger fade in" ng-show="ui.showDanderPanel">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                            <strong>Holy guacamole!</strong> Best check yo self, you're not looking too good.
+                        </div>
+						<p>Queue length: {{ uploader.queue.length }}</p>
                         <table class="table">
                             <thead>
                                 <tr>
@@ -39,7 +45,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr ng-repeat="item in uploader.queue">
+                                <tr class="trFile" ng-repeat="item in uploader.queue">
                                     <td><strong>{{ item.file.name }}</strong></td>
                                     <td ng-show="uploader.isHTML5" nowrap>{{ item.file.size/1024/1024|number:2 }} MB</td>
                                     <td ng-show="uploader.isHTML5">

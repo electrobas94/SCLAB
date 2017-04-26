@@ -19,10 +19,13 @@ namespace SCLAB
 				"~/Scripts/angular-file-upload.min.js" ) );
 
 				bundles.Add( new ScriptBundle( "~/bundles/ElementEditor" ).Include(
+					 "~/WebScripts/RenderEngineService.js",
+					 "~/WebScripts/RenderPreview.js",
 					"~/WebScripts/MeshFileLoader.js",
 					"~/WebScripts/ElementEditor.js" ) );
 
-				
+				bundles.Add( new ScriptBundle( "~/bundles/blender" ).Include(
+					 "~/Scripts/blender/b4w.min.js" ) );
 
 				// Use the development version of Modernizr to develop with and learn from. Then, when you're
 				// ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
