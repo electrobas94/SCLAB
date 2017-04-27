@@ -5,9 +5,28 @@
     margin: 0px;
     position: absolute;
     padding-top: 10%;
-    z-index: 2;
+    z-index: 3;
     margin-top: -20px;
     animation: animUploadFilePanel 1s 1 alternate;
+}
+
+#ListElementPanel1{
+    background-color: rgba(0, 0, 0, 0.43);
+    width: 100%;
+    height: 100%;
+    margin: 0px;
+    position: absolute;
+    padding-top: 10%;
+    z-index: 5;
+    margin-top: -20px;
+    animation: animUploadFilePanel 1s 1 alternate;
+}
+
+
+#ListElementPanel1 div
+{
+	 padding-top:initial;
+	 position:initial;
 }
 
 #UploadFilesPanel div
@@ -19,6 +38,8 @@
 #CanvasElementEditor
 {
 	 height:40vh;
+     padding:0;
+
 }
 
 .file_upload{
@@ -113,4 +134,45 @@
         top:9%;
 
     }
+}
+#buttonCanvas{
+
+    z-index:2;
+}
+.headerPanelElementEditor {
+    color: #3c763d;
+    background-color: #dff0d8;
+    border-color: #d6e9c6;
+}
+
+#nameElement {
+    font-size: 29px;
+}
+#nameElement > span {
+    color: black;
+}
+#typeElement {
+    font-size: 20px;
+}
+.btnToolbarBig {
+    top:1.5vh;
+}
+
+.btnAnimIncrease:hover {
+    animation: animIncrease 1s 1 normal;
+    right: 20px;
+}
+
+@keyframes animIncrease{
+    from{
+        right:0;
+    }
+    to{
+        right:20px;
+    }
+}
+.btnType {
+    color: white;
+    background-color: #3c763d;
+    border-color: #3c763d;
 }

@@ -1,7 +1,7 @@
 ﻿class ElementEditor
 {
 	 public _RenderPreview: RenderPreview;
-	 private _MeshFileLoader: MeshFileLoader;
+	 public _MeshFileLoader: MeshFileLoader;
 
 	 constructor() {
 		  this._RenderPreview = new RenderPreview();

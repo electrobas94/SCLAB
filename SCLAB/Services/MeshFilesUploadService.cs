@@ -65,7 +65,7 @@ namespace SCLAB.Services
 
 				if ( _JsonFile != "" )
 				{
-					 _MeshRepository.AddNewElement( new MeshModel( ServerDirectory + _ActiveDirectory ) );
+					 _MeshRepository.AddNewElement( new MeshModel( _ActiveDirectory, _JsonFile ) );
 					 return "/UsersData/Models3d/" + _ActiveDirectory + '/'+ _JsonFile;
 				}
 

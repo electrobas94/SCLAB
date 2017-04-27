@@ -47,5 +47,10 @@ namespace SCLAB.Repositories
 		  {
 				throw new NotImplementedException();
 		  }
+
+		  public int UpdatElement( MeshModel element )
+		  {
+				throw new NotImplementedException();
+		  }
 	 }
 }

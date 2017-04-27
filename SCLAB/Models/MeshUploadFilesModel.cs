@@ -26,6 +26,7 @@ namespace SCLAB.Models
 		  }
 	 }
 
+	 /*
 
 	 public class MeshUploadFilesModel
 	 {
@@ -46,5 +47,5 @@ namespace SCLAB.Models
 						  ModelTextureFiles.Add( new HttpUploadedFile( textureFile ) );
 				}
 		  }
-	 }
+	 }*/
 }

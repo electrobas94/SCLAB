@@ -1,23 +1,29 @@
 ﻿class MeshFileLoaderUI
 {
 	 public showMeshUploadPanel: boolean;
+	 public showLestElementPanel: boolean;
 	 public MeshList: Array<string>;
+	 public ElementList: Array<string>;
 
 	 constructor()
 	 {
 		  this.MeshList = [];
+		  this.ElementList = [];
 		  this.showMeshUploadPanel = false;
+		  this.showLestElementPanel = true;
 	 }
 }
 
 
 class MeshFileLoader {
 
+	 private id = -1;
 	 private _RenderPreview: RenderPreview;
 
 	 private _MeshFileLoaderModule: angular.IModule;
 	 private _FileUploader: any;
 	 private _HttpService: ng.IHttpService;
+	 private _HttpParamSerializer: ng.IHttpParamSerializer;
 
 	 private _MeshFileLoaderUI: MeshFileLoaderUI;
 
@@ -29,6 +35,28 @@ class MeshFileLoader {
 				_this._FileUploader.uploadAll();
 		  });
 		  
+	 }
+
+	 public ElementsLoad(): void {
+		  let _this = this;
+		  if (_this._HttpService) {
+				_this._HttpService.get("/ElementEditor/GetElementList").success(function (response: any) {
+					 _this._MeshFileLoaderUI.ElementList = JSON.parse(response.data);
+				});
+		  }
+
+	 }
+
+	 public ElementSave()
+	 {
+		  let _this = this;
+		  //{ 'data': JSON.stringify({ id: 0, sceneMap: "asdasd" }) }
+		  //$httpParamSerializer({param:val,secondParam:secondVal})
+		  this._HttpService.post("/ElementEditor/ElementSave?", JSON.stringify({ id: _this.id, name: "Here must be element name", description:"Lem", sceneMap: _this._RenderPreview.GetSceneObjectMap() }))
+				.then((response: any) => {
+					 if (response.data)
+						  _this.id = parseInt( response.data );
+		  });
 	 }
 
 	 private CompleteUploadFiles(isSuccess: boolean): void
@@ -53,11 +81,14 @@ class MeshFileLoader {
 		  let _this = this;
 		  this._MeshFileLoaderModule = angular.module('ElementEditor', ['angularFileUpload']);
 
-		  _this._MeshFileLoaderModule.controller("MeshLoaderController", ['$scope', '$http', 'FileUploader', function ($scope: any, $http: ng.IHttpService, FileUploader: any) {
+		  _this._MeshFileLoaderModule.controller("MeshLoaderController", ['$scope', '$http', '$httpParamSerializer', 'FileUploader',
+				function ($scope: any, $http: ng.IHttpService, $httpParamSerializer: ng.IHttpParamSerializer, FileUploader: any) {
 
 				// set def value
 				$scope.StartUploading = () => { _this.StartUploading() };
+				$scope.ElementSave = () => { _this.ElementSave(); };
 				_this._HttpService = $http;
+				_this._HttpParamSerializer = $httpParamSerializer;
 
 				_this._MeshFileLoaderUI = new MeshFileLoaderUI();
 				$scope.ui = _this._MeshFileLoaderUI;
@@ -94,5 +125,7 @@ class MeshFileLoader {
 
 				_this._FileUploader.onCompleteAll = () => { _this.CompleteUploadFiles( true); };
 				}]);
+
+		  _this.ElementsLoad();
 	 }
 }

@@ -8,11 +8,13 @@ namespace SCLAB.Models
 	 public class MeshModel
 	 {
 		  public int Id { get; set; }
-		  public string URLFileModel { get; set; }
+		  public string FolderName { get; set; }
+		  public string JsonMeshName { get; set; }
 
-		  public MeshModel( string urlFileOfModel )
+		  public MeshModel( string folderName, string jsonMeshName )
 		  {
-				URLFileModel = urlFileOfModel;
+				FolderName = folderName;
+				JsonMeshName = jsonMeshName;
 		  }
 	 }
 }

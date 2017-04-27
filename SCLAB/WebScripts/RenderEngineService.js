@@ -75,6 +75,7 @@ var B4WModule = (function () {
 }());
 var RenderEngineService = (function () {
     function RenderEngineService() {
+        this.MeshFileList = [];
         this.canvasId = "CanvasElementEditor";
         var _this = this;
         _this.EngineModules = new B4WModule();
@@ -243,6 +244,8 @@ var RenderEngineService = (function () {
     };
     RenderEngineService.prototype.appendMeshIn = function (fileName) {
         this.EngineModules.DataModule.load(fileName, null, null, null, false);
+        this.MeshFileList.push(fileName);
     };
     return RenderEngineService;
 }());
+//# sourceMappingURL=RenderEngineService.js.map

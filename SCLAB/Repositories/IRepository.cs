@@ -11,5 +11,7 @@ namespace SCLAB.Repositories
 		  int AddNewElement( T element );
 		  T GetElementById( int id );
 		  void DeleteElement( T element );
+
+		  int UpdatElement( T element );
 	 }
 }

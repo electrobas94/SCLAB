@@ -10,18 +10,33 @@ namespace SCLAB.Controllers
 	 public class ElementEditorController : Controller
     {
 		  private Services.MeshFilesUploadService _MeshUploader;
+		  private Services.ElementService _ElementService;
 
-        // GET: ElementEditor
-        public ActionResult Index()
+		  // GET: ElementEditor
+		  public ActionResult Index()
         {
             return View();
         }
+
+		  public ActionResult GetElementList()
+		  {
+				return View( _ElementService.GetElementList());
+		  }
 
 		  [HttpPost]
 		  public ActionResult UploadModelFile( HttpPostedFileBase file )
 		  {
 				_MeshUploader.FileSave( file );
 				return Content("Ok");
+		  }
+
+		  [HttpPost]
+		  public ActionResult ElementSave( int? id, string name, string description, string sceneMap )
+		  {
+				var element = new Models.ElementModel( id, name, description, sceneMap);
+
+
+				return Content( _ElementService.SaveElement(element).ToString() );
 		  }
 
 		  [HttpGet]
@@ -47,6 +62,7 @@ namespace SCLAB.Controllers
 		  public ElementEditorController()
 		  {
 				_MeshUploader = Services.MeshFilesUploadService.GetMeshFilesUploader();
+				_ElementService = Services.ElementService.GetElementService();
 		  }
 	 }
 }

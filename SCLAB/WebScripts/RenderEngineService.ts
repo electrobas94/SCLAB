@@ -47,7 +47,8 @@ class ScenesModule {
 class TransformModule {
 	 public get_translation: Function;
 	 public set_translation: Function;
-	 public set_translation_v: Function;	 
+	 public set_translation_v: Function;
+	 public get_tsr: Function;		
 }
 
 class MouseModule {
@@ -92,9 +93,11 @@ class B4WModule
 
 class RenderEngineService
 {
+	 public MeshFileList: Array<string> = [];
+
 	 private canvasId: string = "CanvasElementEditor";
 
-	 private EngineModules: B4WModule;
+	 public EngineModules: B4WModule;
 
 	 private canvasPositionX: number;
 	 private canvasPositionY: number;
@@ -107,6 +110,7 @@ class RenderEngineService
 
 	 public appendMeshIn(fileName: string) {
 		  this.EngineModules.DataModule.load(fileName, null, null, null, false);
+		  this.MeshFileList.push(fileName);
 	 }
 
 	 constructor()
