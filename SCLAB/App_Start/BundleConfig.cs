@@ -24,6 +24,11 @@ namespace SCLAB
 					"~/WebScripts/MeshFileLoader.js",
 					"~/WebScripts/ElementEditor.js" ) );
 
+				bundles.Add( new ScriptBundle( "~/bundles/ToolEditor" ).Include(
+					 "~/WebScripts/RenderEngineService.js",
+					 "~/WebScripts/RenderPreview.js",
+					"~/WebScripts/ToolEditor.js" ) );
+
 				bundles.Add( new ScriptBundle( "~/bundles/blender" ).Include(
 					 "~/Scripts/blender/b4w.min.js" ) );
 
@@ -39,6 +44,7 @@ namespace SCLAB
 				bundles.Add( new StyleBundle( "~/Content/css" ).Include(
 							 "~/Content/bootstrap.css",
 							"~/Content/ElementEditor.css",
+							"~/Content/ToolEditor.css",
 							 "~/Content/site.css" ) );	
 		  }
 	 }

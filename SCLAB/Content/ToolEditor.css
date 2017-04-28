@@ -1,2 +1,26 @@
-﻿body {
+﻿.RenderArea
+{
+	 background-color:#a3a3a3;
+	 height:100%;
+}
+
+.tab-pane .row
+{
+	 height:81vh;
+}
+
+.h100p{
+	 height:100%;
+}
+
+.h40p{
+	 height:40%;
+}
+
+.h60p{
+	 height:60%;
+}
+
+canvas
+{
 }

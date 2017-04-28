@@ -317,6 +317,7 @@
     <TypeScriptCompile Include="WebScripts\MeshFileLoader.ts" />
     <TypeScriptCompile Include="WebScripts\RenderEngineService.ts" />
     <TypeScriptCompile Include="WebScripts\RenderPreview.ts" />
+    <TypeScriptCompile Include="WebScripts\ToolEditor.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

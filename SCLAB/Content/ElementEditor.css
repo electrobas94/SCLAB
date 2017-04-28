@@ -1,4 +1,8 @@
-﻿#UploadFilesPanel {
+﻿body{
+	 overflow-y:hidden;
+}
+
+#UploadFilesPanel {
     background-color: rgba(0, 0, 0, 0.43);
     width: 100%;
     height: 100%;
@@ -27,11 +31,36 @@
 #ListElementPanel > div > div > div.panel-body > div.col-lg-4.panel.panel-default{
     height:50vh;
 }
+.elementListInfo {
+    text-align: center;
+    color: #3c763d;
+    padding:3px;
+    font-size:18px;
+    width:100%;
+}
+.elementListInfo input{
+    width:100%!important;
+    margin:0;
+}
+.elementListInfo textarea{
+    width:100%;
+    height:20vh;
+    margin-bottom:10px;
+}
+.elementListInfo span{
+    background-image:url(images/logo.png);
+    height:10vh;
+    width:10vh;
+    border-radius:5px;
+    background-position:center;
+    background-repeat:no-repeat;
+    background-size:contain;
 
-#ListElementPanel1 div
-{
-	 padding-top:initial;
-	 position:initial;
+}
+
+#ListElementPanel1 div {
+    padding-top: initial;
+    position: initial;
 }
 
 #UploadFilesPanel div
@@ -40,7 +69,7 @@
 	 position:initial;
 }
 
-#CanvasElementEditor {
+.canvasElementEditor {
     height: 40vh;
     padding: 0;
     min-height: 315px;
@@ -121,7 +150,7 @@
 }
 
 
-#CanvasElementEditor > canvas {
+.canvasElementEditor > canvas {
     top:1px!important;
     left: 16px!important;
     border-radius:3px;
