@@ -10,7 +10,7 @@
     animation: animUploadFilePanel 1s 1 alternate;
 }
 
-#ListElementPanel1{
+#ListElementPanel{
     background-color: rgba(0, 0, 0, 0.43);
     width: 100%;
     height: 100%;
@@ -22,6 +22,11 @@
     animation: animUploadFilePanel 1s 1 alternate;
 }
 
+#ListElementPanel > div > div > div.panel-body > div.col-lg-3.panel.panel-default,
+#ListElementPanel > div > div > div.panel-body > div.col-lg-5.panel.panel-default,
+#ListElementPanel > div > div > div.panel-body > div.col-lg-4.panel.panel-default{
+    height:50vh;
+}
 
 #ListElementPanel1 div
 {
@@ -35,11 +40,10 @@
 	 position:initial;
 }
 
-#CanvasElementEditor
-{
-	 height:40vh;
-     padding:0;
-
+#CanvasElementEditor {
+    height: 40vh;
+    padding: 0;
+    min-height: 315px;
 }
 
 .file_upload{
@@ -155,12 +159,12 @@
     font-size: 20px;
 }
 .btnToolbarBig {
-    top:1.5vh;
+    margin-top:18px;
+    margin-right:-16px;
 }
-
 .btnAnimIncrease:hover {
     animation: animIncrease 1s 1 normal;
-    right: 20px;
+    right: 15px;
 }
 
 @keyframes animIncrease{
@@ -168,11 +172,123 @@
         right:0;
     }
     to{
-        right:20px;
+        right:15px;
     }
 }
-.btnType {
+#btnType {
     color: white;
-    background-color: #3c763d;
-    border-color: #3c763d;
+    background-color: #aac69e;
+    border-color: #98b68b;
+}
+#typeElement select {
+    color: white;
+    background-color: #aac69e;
+    border-color: #98b68b;
+    border-radius: 3px;
+}
+
+.elementItem
+{
+    border:1px solid white;
+    border-radius:5px;
+	 margin:1vh;
+	 display:inline-block;
+	 height:7vh;
+	 width:7vh;
+	 background-image:url('/Content/images/logo.png');
+	 background-size:contain;
+	 background-repeat:no-repeat;
+	 background-position:center;
+}
+.elementItem:hover {
+    animation: animElemEditor 1s 1 normal;
+    width: 8vh;
+    background-size: cover;
+}
+@keyframes animElemEditor {
+    from {
+        width: 7vh;
+    }
+
+    to {
+        width: 8vh;
+    }
+}
+
+.elementItem span {
+    display: block;
+    height: 2.5vh;
+    word-wrap: break-word;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    color: #fff;
+    text-shadow: 1px 1px 6px black, 0 0 1em black;
+    background-color:rgba(0, 0, 0, 0.25);
+    border-radius:5px;
+}
+
+.discriptionPanel {
+    height:25%;
+    
+}
+.discriptionPanel >div {
+    padding-top: 3px;
+}
+.authorsAndTagsPanel {
+    height: 50%;
+    margin-bottom: 5px;
+}
+.authorsAndTagsPanel > div {
+    padding-top: 3px;
+}
+.infoElementEditorPanel {
+    height: 40vh;
+    min-height: 315px;
+}
+#ElementEditorPanel > div > div > div:nth-child(2) > div:nth-child(2) > div > div.panel-body {
+    height: 100%;
+    padding-top:0;
+}
+.authorsAndTagsPanel > div > ul > li.btn-success,
+.authorsAndTagsPanel > div > ul > li.btn-danger {
+        float: right;
+        border:1px solid white;
+        border-radius:5px;
+        padding:4px 2px 4px 2px;
+        margin:2px;
+
+}
+.logoElementEditor {
+    height: 140px;
+    width: 140px;
+    border-radius:5px;
+    background-color:white;
+    background-image: url(images/logo.png);
+    background-repeat:no-repeat;
+    background-position:center;
+    background-size:contain;
+    padding:0;
+}
+.logoElementEditor button {
+    width: 100%;
+    margin-top: 118px;
+    padding: 0 10px 0 10px;
+    background-color: rgba(0, 0, 0, 0.25);
+    text-shadow: 1px 1px 6px black, 0 0 1em black;
+    color:white;
+}
+.logoElementEditor button:hover{
+    color:white;
+    background-color:rgba(255, 255, 255, 0.50);
+}
+#buttonCanvas button {
+    background-color: rgba(0, 0, 0, 0.25);
+    text-shadow: 1px 1px 6px black, 0 0 1em black;
+    color: white;
+    border-color:black;
+}
+#buttonCanvas button:hover {
+    color: white;
+    background-color: rgba(255, 255, 255, 0.50);
+    border-color: aliceblue;
 }

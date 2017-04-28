@@ -10,7 +10,8 @@ namespace SCLAB.Repositories
 	 public class ElementContext :DbContext
 	 {
 		  public ElementContext() : base( "DefaultConnection" )
-		  { }
+		  {
+		  }
 
 		  public DbSet<ElementModel> Elements { get; set; }
 	 }
@@ -19,11 +20,15 @@ namespace SCLAB.Repositories
 
 	 public class ElementRepository :IRepository<ElementModel>, IDisposable
 	 {
-		  ElementContext db;
+		  private ElementContext db;
 
-		  public ElementModelShort[] GetElementsInShortModel()
+		  public List<ElementModelShort> GetElementsInShortModel()
 		  {
-				return db.Elements.Select( p => new ElementModelShort(p.Id, p.Name ) ).ToArray();
+				List<ElementModelShort> tmp = new List<ElementModelShort>();
+				foreach ( var obj in db.Elements.ToList() )
+					 tmp.Add( new ElementModelShort( obj.Id, obj.Name ) );
+				//db.Elements.Select( p => p.Id);
+				return tmp;
 		  }
 
 		  public ElementRepository()
@@ -48,6 +53,7 @@ namespace SCLAB.Repositories
 				return elem.Id;
 		  }
 
+
 		  public void DeleteElement( ElementModel element )
 		  {
 				throw new NotImplementedException();
@@ -55,7 +61,7 @@ namespace SCLAB.Repositories
 
 		  public ElementModel GetElementById( int id )
 		  {
-				throw new NotImplementedException();
+				return db.Elements.Find(id);
 		  }
 
 		  public int UpdatElement( ElementModel element )

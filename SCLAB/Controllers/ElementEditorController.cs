@@ -18,9 +18,19 @@ namespace SCLAB.Controllers
             return View();
         }
 
+		  [HttpGet]
 		  public ActionResult GetElementList()
 		  {
-				return View( _ElementService.GetElementList());
+				return Content( _ElementService.GetElementList());
+		  }
+
+		  [HttpGet]
+		  public ActionResult GetElementById( int? id)
+		  {
+				if ( id != null )
+					 return Content( _ElementService.GetElementById( ( int )id ) );
+				else
+					 return Content("");
 		  }
 
 		  [HttpPost]

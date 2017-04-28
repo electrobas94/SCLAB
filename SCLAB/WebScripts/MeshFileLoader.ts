@@ -4,9 +4,11 @@
 	 public showLestElementPanel: boolean;
 	 public MeshList: Array<string>;
 	 public ElementList: Array<string>;
+	 public SelectElem: any;
 
 	 constructor()
 	 {
+		  this.SelectElem = null;
 		  this.MeshList = [];
 		  this.ElementList = [];
 		  this.showMeshUploadPanel = false;
@@ -27,6 +29,21 @@ class MeshFileLoader {
 
 	 private _MeshFileLoaderUI: MeshFileLoaderUI;
 
+	 public ElementOpen()
+	 {
+		  let _this = this;
+		  _this._HttpService.get("/ElementEditor/GetElementById?id=" + _this._MeshFileLoaderUI.SelectElem.Id).then(function (response) {
+				_this._MeshFileLoaderUI.SelectElem = response.data;
+
+				_this.id = _this._MeshFileLoaderUI.SelectElem.Id;
+
+				if (_this._MeshFileLoaderUI.SelectElem.JsonMapScene != undefined)
+				{
+					 let tmp = JSON.parse(_this._MeshFileLoaderUI.SelectElem.JsonMapScene);//.objects;
+					 _this._RenderPreview.UpdatePositionInScene(tmp.objects, tmp.meshFiles );
+				}
+		  });
+	 }
 
 	 public StartUploading(): void
 	 {
@@ -40,8 +57,9 @@ class MeshFileLoader {
 	 public ElementsLoad(): void {
 		  let _this = this;
 		  if (_this._HttpService) {
-				_this._HttpService.get("/ElementEditor/GetElementList").success(function (response: any) {
-					 _this._MeshFileLoaderUI.ElementList = JSON.parse(response.data);
+				_this._HttpService.get("/ElementEditor/GetElementList").then(function (response: any) {
+					 console.log(response.data);
+					 _this._MeshFileLoaderUI.ElementList = response.data;
 				});
 		  }
 
@@ -74,8 +92,7 @@ class MeshFileLoader {
 		  });
 	 }
 
-	 constructor( renderPreview:RenderPreview)
-	 {
+	 constructor(renderPreview: RenderPreview) {
 		  this._RenderPreview = renderPreview;
 
 		  let _this = this;
@@ -84,19 +101,20 @@ class MeshFileLoader {
 		  _this._MeshFileLoaderModule.controller("MeshLoaderController", ['$scope', '$http', '$httpParamSerializer', 'FileUploader',
 				function ($scope: any, $http: ng.IHttpService, $httpParamSerializer: ng.IHttpParamSerializer, FileUploader: any) {
 
-				// set def value
-				$scope.StartUploading = () => { _this.StartUploading() };
-				$scope.ElementSave = () => { _this.ElementSave(); };
-				_this._HttpService = $http;
-				_this._HttpParamSerializer = $httpParamSerializer;
+					 // set def value
+					 $scope.StartUploading = () => { _this.StartUploading() };
+					 $scope.ElementSave = () => { _this.ElementSave(); };
+					 $scope.ElementOpen = () => { _this.ElementOpen(); };
+					 _this._HttpService = $http;
+					 _this._HttpParamSerializer = $httpParamSerializer;
 
-				_this._MeshFileLoaderUI = new MeshFileLoaderUI();
-				$scope.ui = _this._MeshFileLoaderUI;
+					 _this._MeshFileLoaderUI = new MeshFileLoaderUI();
+					 $scope.ui = _this._MeshFileLoaderUI;
 
-				_this._FileUploader = $scope.uploader = new FileUploader({ url: '/ElementEditor/UploadModelFile' });
+					 _this._FileUploader = $scope.uploader = new FileUploader({ url: '/ElementEditor/UploadModelFile' });
 
 					 // a sync filter
-				_this._FileUploader.filters.push({
+					 _this._FileUploader.filters.push({
 						  name: 'syncFilter',
 						  fn: function (item /*{File|FileLikeObject}*/, options) {
 								return this.queue.length < 10;
@@ -104,7 +122,7 @@ class MeshFileLoader {
 					 });
 
 					 // an async filter
-				_this._FileUploader.filters.push({
+					 _this._FileUploader.filters.push({
 						  name: 'asyncFilter',
 						  fn: function (item /*{File|FileLikeObject}*/, options, deferred) {
 								setTimeout(deferred.resolve, 1e3);
@@ -112,20 +130,20 @@ class MeshFileLoader {
 					 });
 
 					 // CALLBACKS
-				_this._FileUploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) {};
-				_this._FileUploader.onAfterAddingFile = function (fileItem) {};
-				_this._FileUploader.onAfterAddingAll = function (addedFileItems) {};
-				_this._FileUploader.onBeforeUploadItem = function (item) {};
-				_this._FileUploader.onProgressItem = function (fileItem, progress) {};
-				_this._FileUploader.onProgressAll = function (progress) {};
-				_this._FileUploader.onSuccessItem = function (fileItem, response, status, headers) {};
-				_this._FileUploader.onErrorItem =  () => { _this.CompleteUploadFiles(false); };
-				_this._FileUploader.onCancelItem = () => { _this.CompleteUploadFiles(false); };
-				_this._FileUploader.onCompleteItem = function (fileItem, response, status, headers) { };
+					 _this._FileUploader.onWhenAddingFileFailed = function (item /*{File|FileLikeObject}*/, filter, options) { };
+					 _this._FileUploader.onAfterAddingFile = function (fileItem) { };
+					 _this._FileUploader.onAfterAddingAll = function (addedFileItems) { };
+					 _this._FileUploader.onBeforeUploadItem = function (item) { };
+					 _this._FileUploader.onProgressItem = function (fileItem, progress) { };
+					 _this._FileUploader.onProgressAll = function (progress) { };
+					 _this._FileUploader.onSuccessItem = function (fileItem, response, status, headers) { };
+					 _this._FileUploader.onErrorItem = () => { _this.CompleteUploadFiles(false); };
+					 _this._FileUploader.onCancelItem = () => { _this.CompleteUploadFiles(false); };
+					 _this._FileUploader.onCompleteItem = function (fileItem, response, status, headers) { };
 
-				_this._FileUploader.onCompleteAll = () => { _this.CompleteUploadFiles( true); };
+					 _this._FileUploader.onCompleteAll = () => { _this.CompleteUploadFiles(true); };
 				}]);
 
-		  _this.ElementsLoad();
+		  setTimeout(() => { _this.ElementsLoad() }, 200 );
 	 }
 }

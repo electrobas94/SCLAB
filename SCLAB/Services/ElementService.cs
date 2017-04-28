@@ -32,6 +32,11 @@ namespace SCLAB.Services
 				return JsonConvert.SerializeObject( elements );
 		  }
 
+		  internal string GetElementById( int id )
+		  {
+				return JsonConvert.SerializeObject( _ElementRepository.GetElementById( id) );
+		  }
+
 		  public int SaveElement( Models.ElementModel element )
 		  {
 				return _ElementRepository.UpdatElement( element );

@@ -1,5 +1,6 @@
 var MeshFileLoaderUI = (function () {
     function MeshFileLoaderUI() {
+        this.SelectElem = null;
         this.MeshList = [];
         this.ElementList = [];
         this.showMeshUploadPanel = false;
@@ -18,6 +19,7 @@ var MeshFileLoader = (function () {
                 // set def value
                 $scope.StartUploading = function () { _this.StartUploading(); };
                 $scope.ElementSave = function () { _this.ElementSave(); };
+                $scope.ElementOpen = function () { _this.ElementOpen(); };
                 _this._HttpService = $http;
                 _this._HttpParamSerializer = $httpParamSerializer;
                 _this._MeshFileLoaderUI = new MeshFileLoaderUI();
@@ -50,8 +52,19 @@ var MeshFileLoader = (function () {
                 _this._FileUploader.onCompleteItem = function (fileItem, response, status, headers) { };
                 _this._FileUploader.onCompleteAll = function () { _this.CompleteUploadFiles(true); };
             }]);
-        _this.ElementsLoad();
+        setTimeout(function () { _this.ElementsLoad(); }, 200);
     }
+    MeshFileLoader.prototype.ElementOpen = function () {
+        var _this = this;
+        _this._HttpService.get("/ElementEditor/GetElementById?id=" + _this._MeshFileLoaderUI.SelectElem.Id).then(function (response) {
+            _this._MeshFileLoaderUI.SelectElem = response.data;
+            _this.id = _this._MeshFileLoaderUI.SelectElem.Id;
+            if (_this._MeshFileLoaderUI.SelectElem.JsonMapScene != undefined) {
+                var tmp = JSON.parse(_this._MeshFileLoaderUI.SelectElem.JsonMapScene); //.objects;
+                _this._RenderPreview.UpdatePositionInScene(tmp.objects, tmp.meshFiles);
+            }
+        });
+    };
     MeshFileLoader.prototype.StartUploading = function () {
         var _this = this;
         _this._HttpService.get("/ElementEditor/UploadModelFilesStart").then(function (response) {
@@ -61,8 +74,9 @@ var MeshFileLoader = (function () {
     MeshFileLoader.prototype.ElementsLoad = function () {
         var _this = this;
         if (_this._HttpService) {
-            _this._HttpService.get("/ElementEditor/GetElementList").success(function (response) {
-                _this._MeshFileLoaderUI.ElementList = JSON.parse(response.data);
+            _this._HttpService.get("/ElementEditor/GetElementList").then(function (response) {
+                console.log(response.data);
+                _this._MeshFileLoaderUI.ElementList = response.data;
             });
         }
     };

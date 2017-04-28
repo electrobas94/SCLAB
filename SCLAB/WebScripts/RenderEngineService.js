@@ -165,7 +165,7 @@ var RenderEngineService = (function () {
                 if (e.preventDefault)
                     e.preventDefault();
                 var x = _this.EngineModules.MouseModule.get_coords_x(e) - _this.canvasPositionX;
-                var y = _this.EngineModules.MouseModule.get_coords_y(e) - _this.canvasPositionY;
+                var y = _this.EngineModules.MouseModule.get_coords_y(e) - (_this.canvasPositionY - window.pageYOffset);
                 var obj = _this.EngineModules.ScenesModule.pick_object(x, y);
                 // handling outline effect
                 if (_selected_obj != obj) {
@@ -208,7 +208,7 @@ var RenderEngineService = (function () {
                         // calculate viewport coordinates
                         var cam = _this.EngineModules.ScenesModule.get_active_camera();
                         var x = _this.EngineModules.MouseModule.get_coords_x(e) - _this.canvasPositionX;
-                        var y = _this.EngineModules.MouseModule.get_coords_y(e) - _this.canvasPositionY;
+                        var y = _this.EngineModules.MouseModule.get_coords_y(e) - (_this.canvasPositionY - window.pageYOffset);
                         if (x >= 0 && y >= 0) {
                             x -= _obj_delta_xy[0];
                             y -= _obj_delta_xy[1];
@@ -245,6 +245,19 @@ var RenderEngineService = (function () {
     RenderEngineService.prototype.appendMeshIn = function (fileName) {
         this.EngineModules.DataModule.load(fileName, null, null, null, false);
         this.MeshFileList.push(fileName);
+    };
+    RenderEngineService.prototype.LoadSceneList = function (fileNames, updateTransform) {
+        var i = 0;
+        var _this = this;
+        function loadcb() {
+            if (i < fileNames.length) {
+                _this.EngineModules.DataModule.load(fileNames[i], loadcb, null, null, false);
+                i++;
+            }
+            else
+                updateTransform();
+        }
+        _this.EngineModules.DataModule.load("/UsersData/Models3d/SystemFiles/defaultScene.json", loadcb, null, null, false);
     };
     return RenderEngineService;
 }());

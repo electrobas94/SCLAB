@@ -2,13 +2,25 @@
     <div class="col-lg-10 col-lg-offset-1">
         <div class="panel panel-success">
             <div class="panel-heading">Elements list</div>
-                    <div class="panel-body">
-                        <div class="col-xs-6 col-md-3" ng-repeat="n in ui.ElementList track by $index">
-                            <a href="#" class="thumbnail">
-                                <img src="..." alt="...">
-                            </a>
-                        </div>
+            <div class="panel-body">
+                <div class="col-lg-3 panel panel-default">
+                    
+                </div>
+                <div class="col-lg-5 panel panel-default">
+                    <div class="elementItem" ng-repeat="n in ui.ElementList track by $index" ng-click="ui.SelectElem = n">
+                        <span>{{n.Name}}</span>
+                    </div>
+                </div>
+                <div class="col-lg-4 panel panel-default">
+                    <div class="panel-default ">
+                        ElementName:
+                        <input class="form-control" value="{{ui.SelectElem.Name}}" />
+                        Description:
+                        <textarea class="form-control">{{ui.SelectElem.Description}}</textarea>
+                        <button class="btn btn-default col-lg-12" ng-click="ElementOpen()">Edit element</button>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>

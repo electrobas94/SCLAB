@@ -20,6 +20,27 @@ class RenderPreview
 		  return JSON.stringify(mapFile);
 	 }
 
+	 public UpdatePositionInScene(sceneMap: Array<any>, meshList: Array<any>)
+	 {
+
+		  this._RenderEngineService.EngineModules.DataModule.cleanup();
+		  this._RenderEngineService.LoadSceneList(meshList, UpdateTransform);
+
+		  let _this = this;
+
+		  function UpdateTransform() {
+				var objList = _this._RenderEngineService.EngineModules.ScenesModule.get_all_objects();
+
+				for (let i = 0; i < sceneMap.length; i++) {
+					 for (let j = 0; j < sceneMap.length; j++)
+						  if (objList[j].vj == sceneMap[i].id) {
+								_this._RenderEngineService.EngineModules.TransformModule.set_tsr(objList[j], sceneMap[i].tsr);
+								break;
+						  }
+				}
+		  }
+	 }
+
 	 constructor() {
 		  this._RenderEngineService = new RenderEngineService();
 	 }

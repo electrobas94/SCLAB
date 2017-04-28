@@ -27,6 +27,7 @@ class ContainerModule {
 
 class DataModule {
 	 public load: Function;
+	 public cleanup: Function;
 }
 
 class CameraModule {
@@ -48,7 +49,8 @@ class TransformModule {
 	 public get_translation: Function;
 	 public set_translation: Function;
 	 public set_translation_v: Function;
-	 public get_tsr: Function;		
+	 public get_tsr: Function;
+	 public set_tsr: Function;
 }
 
 class MouseModule {
@@ -111,6 +113,24 @@ class RenderEngineService
 	 public appendMeshIn(fileName: string) {
 		  this.EngineModules.DataModule.load(fileName, null, null, null, false);
 		  this.MeshFileList.push(fileName);
+	 }
+
+	 public LoadSceneList(fileNames: Array<string>, updateTransform: Function )
+	 {
+		  let i = 0;
+		  let _this = this;
+
+		  function loadcb()
+		  {
+				if (i < fileNames.length) {
+					 _this.EngineModules.DataModule.load(fileNames[i], loadcb, null, null, false);
+					 i++;
+				}
+				else
+					 updateTransform();
+		  }
+
+		  _this.EngineModules.DataModule.load( "/UsersData/Models3d/SystemFiles/defaultScene.json", loadcb, null, null, false);
 	 }
 
 	 constructor()
@@ -233,7 +253,7 @@ class RenderEngineService
 						  e.preventDefault();
 
 					 var x = _this.EngineModules.MouseModule.get_coords_x(e) - _this.canvasPositionX;
-					 var y = _this.EngineModules.MouseModule.get_coords_y(e) - _this.canvasPositionY;
+					 var y = _this.EngineModules.MouseModule.get_coords_y(e) - (_this.canvasPositionY - window.pageYOffset);
 
 					 var obj = _this.EngineModules.ScenesModule.pick_object(x, y);
 
@@ -265,6 +285,7 @@ class RenderEngineService
 				}
 
 				function main_canvas_up(e) {
+					 
 					 _drag_mode = false;
 					 // enable camera controls after releasing the object
 					 if (!_enable_camera_controls) {
@@ -286,7 +307,7 @@ class RenderEngineService
 								var cam = _this.EngineModules.ScenesModule.get_active_camera();
 
 								var x = _this.EngineModules.MouseModule.get_coords_x(e) - _this.canvasPositionX;
-								var y = _this.EngineModules.MouseModule.get_coords_y(e) - _this.canvasPositionY;
+								var y = _this.EngineModules.MouseModule.get_coords_y(e) - (_this.canvasPositionY - window.pageYOffset);
 
 								if (x >= 0 && y >= 0) {
 

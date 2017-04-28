@@ -12,6 +12,10 @@ namespace SCLAB.Models
 		  public string Description { get; set; }
 		  public string JsonMapScene { get; set; }
 
+		  public ElementModel()
+		  {
+		  }
+
 		  public ElementModel( int? id, string name, string description, string sceneMap )
 		  {
 				if ( id != null )
@@ -35,5 +39,8 @@ namespace SCLAB.Models
 				Id = id;
 				Name = name;
 		  }
+
+		  public ElementModelShort()
+		  { }
 	 }
 }
