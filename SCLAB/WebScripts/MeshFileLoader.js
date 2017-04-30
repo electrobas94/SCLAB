@@ -103,4 +103,3 @@ var MeshFileLoader = (function () {
     };
     return MeshFileLoader;
 }());
-//# sourceMappingURL=MeshFileLoader.js.map

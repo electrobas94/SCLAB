@@ -229,6 +229,7 @@ var RenderEngineService = (function () {
                             else
                                 _this.EngineModules.TransformModule.set_translation_v(_selected_obj, point);
                             limit_object_position(_selected_obj);
+                            //}
                         }
                     }
             }
@@ -260,4 +261,3 @@ var RenderEngineService = (function () {
     };
     return RenderEngineService;
 }());
-//# sourceMappingURL=RenderEngineService.js.map

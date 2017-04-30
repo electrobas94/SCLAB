@@ -1,6 +1,21 @@
 ﻿body{
-	 overflow-y:hidden;
+	 //overflow-y:hidden;
 }
+
+.headingButton {
+    padding: 5px;
+    overflow: auto;
+}
+.headingButton > div.btn-group.pull-right{
+    display:inline-block;
+}
+
+.headingButton .panel-title{
+    display:inline-block; 
+    font-size:21px; 
+    margin-top:3px;
+}
+
 
 #UploadFilesPanel {
     background-color: rgba(0, 0, 0, 0.43);
@@ -47,15 +62,16 @@
     height:20vh;
     margin-bottom:10px;
 }
-.elementListInfo span{
-    background-image:url(images/logo.png);
-    height:10vh;
-    width:10vh;
-    border-radius:5px;
-    background-position:center;
-    background-repeat:no-repeat;
-    background-size:contain;
-
+.elementListInfo span {
+    margin:auto;
+    display: block;
+    background-image: url(images/logo.png);
+    height: 10vh;
+    width: 10vh;
+    border-radius: 5px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
 }
 
 #ListElementPanel1 div {

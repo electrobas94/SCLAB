@@ -24,6 +24,12 @@ class RenderPreview
 	 {
 
 		  this._RenderEngineService.EngineModules.DataModule.cleanup();
+
+		  this.AppendElement(sceneMap, meshList);
+	 }
+
+	 public AppendElement(sceneMap: Array<any>, meshList: Array<any>)
+	 {
 		  this._RenderEngineService.LoadSceneList(meshList, UpdateTransform);
 
 		  let _this = this;
@@ -33,7 +39,7 @@ class RenderPreview
 
 				for (let i = 0; i < sceneMap.length; i++) {
 					 for (let j = 0; j < sceneMap.length; j++)
-						  if (objList[j].vj == sceneMap[i].id) {
+						  if (objList[j].vj == sceneMap[i].id && objList[j].name != "Camera" ) {
 								_this._RenderEngineService.EngineModules.TransformModule.set_tsr(objList[j], sceneMap[i].tsr);
 								break;
 						  }

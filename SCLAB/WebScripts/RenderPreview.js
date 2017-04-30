@@ -14,13 +14,16 @@ var RenderPreview = (function () {
     };
     RenderPreview.prototype.UpdatePositionInScene = function (sceneMap, meshList) {
         this._RenderEngineService.EngineModules.DataModule.cleanup();
+        this.AppendElement(sceneMap, meshList);
+    };
+    RenderPreview.prototype.AppendElement = function (sceneMap, meshList) {
         this._RenderEngineService.LoadSceneList(meshList, UpdateTransform);
         var _this = this;
         function UpdateTransform() {
             var objList = _this._RenderEngineService.EngineModules.ScenesModule.get_all_objects();
             for (var i = 0; i < sceneMap.length; i++) {
                 for (var j = 0; j < sceneMap.length; j++)
-                    if (objList[j].vj == sceneMap[i].id) {
+                    if (objList[j].vj == sceneMap[i].id && objList[j].name != "Camera") {
                         _this._RenderEngineService.EngineModules.TransformModule.set_tsr(objList[j], sceneMap[i].tsr);
                         break;
                     }
@@ -29,4 +32,3 @@ var RenderPreview = (function () {
     };
     return RenderPreview;
 }());
-//# sourceMappingURL=RenderPreview.js.map
