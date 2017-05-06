@@ -28,7 +28,7 @@ class ToolEditor
 	 public AddElementId(elemId: number)
 	 {
 		  let objectList: Array<any> = this._RenderPreview._RenderEngineService.EngineModules.ScenesModule.get_all_objects("MESH");
-		  //let parentObject: any = null;
+		  let parentObject: any = null;
 
 		  for (let i = 0; i < objectList.length; i++)
 		  {
@@ -38,10 +38,10 @@ class ToolEditor
 					 //console.log(objectList[i]);
 					 objectList[i].elementId = elemId;
 
-					// if (parentObject == null)
-						 // parentObject = objectList[i];
-					 //else
-						 // objectList[i].parent = objectList[i];
+					if (parentObject == null)
+						  parentObject = objectList[i];
+					 else
+						 objectList[i].parent = objectList[i];
 				}
 		  }
 	 }

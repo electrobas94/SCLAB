@@ -269,12 +269,17 @@ var RenderEngineService = (function () {
                                             break;
                                         //Rotate
                                         case 2:
-                                            if (_this.ActiveAxis[0])
+                                            //let obj = _this.EngineModules.TransformModule.get childSelected[i];
+                                            if (_this.childSelected[i].parent)
+                                                _this.EngineModules.TransformModule.rotate_x_local(_this.childSelected[i].parent, value);
+                                            else
                                                 _this.EngineModules.TransformModule.rotate_x_local(_this.childSelected[i], value);
-                                            if (_this.ActiveAxis[1])
-                                                _this.EngineModules.TransformModule.rotate_y_local(_this.childSelected[i], value);
-                                            if (_this.ActiveAxis[2])
-                                                _this.EngineModules.TransformModule.rotate_z_local(_this.childSelected[i], value);
+                                            //if (_this.ActiveAxis[0])
+                                            //_this.EngineModules.TransformModule.rotate_x_local(_this.childSelected[i], value);
+                                            //if (_this.ActiveAxis[1])
+                                            //_this.EngineModules.TransformModule.rotate_y_local(_this.childSelected[i], value);
+                                            //if (_this.ActiveAxis[2])
+                                            //_this.EngineModules.TransformModule.rotate_z_local(_this.childSelected[i], value);
                                             break;
                                         // Scale
                                         case 3:
@@ -368,3 +373,4 @@ var RenderEngineService = (function () {
     };
     return RenderEngineService;
 }());
+//# sourceMappingURL=RenderEngineService.js.map

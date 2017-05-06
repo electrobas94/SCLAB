@@ -34,16 +34,16 @@ var ToolEditor = (function () {
     };
     ToolEditor.prototype.AddElementId = function (elemId) {
         var objectList = this._RenderPreview._RenderEngineService.EngineModules.ScenesModule.get_all_objects("MESH");
-        //let parentObject: any = null;
+        var parentObject = null;
         for (var i = 0; i < objectList.length; i++) {
             //console.log("elemid", objectList[i].elementId);
             if (typeof objectList[i].elementId == "undefined" && this._RenderPreview._RenderEngineService.EngineModules.ObjectsModule.is_dynamic(objectList[i])) {
                 //console.log(objectList[i]);
                 objectList[i].elementId = elemId;
-                // if (parentObject == null)
-                // parentObject = objectList[i];
-                //else
-                // objectList[i].parent = objectList[i];
+                if (parentObject == null)
+                    parentObject = objectList[i];
+                else
+                    objectList[i].parent = objectList[i];
             }
         }
     };
@@ -62,3 +62,4 @@ var ToolEditor = (function () {
     return ToolEditor;
 }());
 var toolEditor = new ToolEditor();
+//# sourceMappingURL=ToolEditor.js.map

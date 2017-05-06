@@ -46,6 +46,7 @@ namespace SCLAB
 				bundles.Add( new StyleBundle( "~/Content/css" ).Include(
 							 "~/Content/bootstrap.css",
 							"~/Content/ElementEditor.css",
+							"~/Content/LogicToolEditor.css",
 							"~/Content/ToolEditor.css",
 							 "~/Content/site.css" ) );	
 		  }
