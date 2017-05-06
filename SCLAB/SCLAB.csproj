@@ -235,10 +235,11 @@
     <Content Include="Scripts\blender\b4w.min.js.map" />
     <Content Include="Scripts\blender\b4w.simple.min.js.map" />
     <Content Include="Scripts\blender\b4w.whitespace.min.js.map" />
-    <Content Include="Scripts\blender\uranium.js.mem" />
+    <Content Include="Scripts\blender\uranium_mem.js" />
     <Content Include="Scripts\blender\uranium_wasm.wasm" />
     <Content Include="Views\ElementEditor\ElementListPanel.cshtml" />
     <Content Include="Views\ToolEditor\Index.cshtml" />
+    <Content Include="WebScripts\ViewScripts.js" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

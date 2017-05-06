@@ -22,12 +22,14 @@ namespace SCLAB
 					 "~/WebScripts/RenderEngineService.js",
 					 "~/WebScripts/RenderPreview.js",
 					"~/WebScripts/MeshFileLoader.js",
-					"~/WebScripts/ElementEditor.js" ) );
+					"~/WebScripts/ElementEditor.js",
+                    "~/WebScripts/ViewScripts.js") );
 
 				bundles.Add( new ScriptBundle( "~/bundles/ToolEditor" ).Include(
 					 "~/WebScripts/RenderEngineService.js",
 					 "~/WebScripts/RenderPreview.js",
-					"~/WebScripts/ToolEditor.js" ) );
+					"~/WebScripts/ToolEditor.js",
+                    "~/WebScripts/ViewScripts.js") );
 
 				bundles.Add( new ScriptBundle( "~/bundles/blender" ).Include(
 					 "~/Scripts/blender/b4w.min.js" ) );

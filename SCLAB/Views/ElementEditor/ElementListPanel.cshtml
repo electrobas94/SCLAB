@@ -13,7 +13,7 @@
 
                 </div>
                 <div class="col-lg-5 panel panel-default">
-                    <div class="elementItem" ng-repeat="n in ui.ElementList track by $index" ng-click="ui.SelectElem = n">
+                    <div class="elementItem" onclick="pressedItem(event)" ng-repeat="n in ui.ElementList track by $index" ng-click="ui.SelectElem = n">
                         <span>{{n.Name}}</span>
                     </div>
                 </div>
@@ -26,7 +26,8 @@
                             <div>Description:</div>
                             <textarea class="form-control">{{ui.SelectElem.Description}}</textarea>
                             <div class="btn-group col-lg-12">
-                                <button class="btn btn-success btn-lg col-lg-12" ng-click="ElementOpen()">Edit element</button>
+                                <button class="btn btn-success btn-lg col-lg-6" ng-click="ui.showLestElementPanel = false; ElementOpen()">Open</button>
+                                <button class="btn btn-danger btn-lg col-lg-6"  ng-click="RemoveElement()">Remove</button>
                             </div>
                         </div>
                     </div>

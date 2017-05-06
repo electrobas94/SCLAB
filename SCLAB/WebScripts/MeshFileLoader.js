@@ -1,5 +1,7 @@
 var MeshFileLoaderUI = (function () {
     function MeshFileLoaderUI() {
+        this.nameElement = "New element";
+        this.descriptionElement = "Description is empty";
         this.SelectElem = null;
         this.MeshList = [];
         this.ElementList = [];
@@ -17,13 +19,17 @@ var MeshFileLoader = (function () {
         _this._MeshFileLoaderModule.controller("MeshLoaderController", ['$scope', '$http', '$httpParamSerializer', 'FileUploader',
             function ($scope, $http, $httpParamSerializer, FileUploader) {
                 // set def value
+                $scope.RemoveElement = function () { _this.RemoveElement(); };
+                $scope.SetActiveTool = function (tool) { _this._RenderPreview._RenderEngineService.ActiveTool = tool; };
+                $scope.SetActiveAxis = function (axis) { _this._RenderPreview.SetActiveAxis(axis); };
                 $scope.StartUploading = function () { _this.StartUploading(); };
                 $scope.ElementSave = function () { _this.ElementSave(); };
                 $scope.ElementOpen = function () { _this.ElementOpen(); };
                 _this._HttpService = $http;
                 _this._HttpParamSerializer = $httpParamSerializer;
-                _this._MeshFileLoaderUI = new MeshFileLoaderUI();
-                $scope.ui = _this._MeshFileLoaderUI;
+                _this.ui = new MeshFileLoaderUI();
+                $scope.ui = _this.ui;
+                //_this.ui.MeshList = _this._RenderPreview._RenderEngineService.MeshFileList;
                 _this._FileUploader = $scope.uploader = new FileUploader({ url: '/ElementEditor/UploadModelFile' });
                 // a sync filter
                 _this._FileUploader.filters.push({
@@ -55,14 +61,27 @@ var MeshFileLoader = (function () {
         setTimeout(function () { _this.ElementsLoad(); }, 200);
     }
     MeshFileLoader.prototype.ElementOpen = function () {
+        this.ui.MeshList.length = 0;
         var _this = this;
-        _this._HttpService.get("/ElementEditor/GetElementById?id=" + _this._MeshFileLoaderUI.SelectElem.Id).then(function (response) {
-            _this._MeshFileLoaderUI.SelectElem = response.data;
-            _this.id = _this._MeshFileLoaderUI.SelectElem.Id;
-            if (_this._MeshFileLoaderUI.SelectElem.JsonMapScene != undefined) {
-                var tmp = JSON.parse(_this._MeshFileLoaderUI.SelectElem.JsonMapScene); //.objects;
+        _this._HttpService.get("/ElementEditor/GetElementById?id=" + _this.ui.SelectElem.Id).then(function (response) {
+            _this.ui.SelectElem = response.data;
+            _this.id = _this.ui.SelectElem.Id;
+            _this.ui.nameElement = _this.ui.SelectElem.Name;
+            if (_this.ui.SelectElem.JsonMapScene != undefined) {
+                var tmp = JSON.parse(_this.ui.SelectElem.JsonMapScene); //.objects;
                 _this._RenderPreview.UpdatePositionInScene(tmp.objects, tmp.meshFiles);
+                for (var i = 0; i < tmp.meshFiles.length; i++) {
+                    var tmpStr = tmp.meshFiles[i].split("/");
+                    _this.ui.MeshList.push(tmpStr[tmpStr.length - 1]);
+                }
             }
+        });
+    };
+    MeshFileLoader.prototype.RemoveElement = function () {
+        var _this = this;
+        _this._HttpService.get("/ElementEditor/RemoveElementById?id=" + _this.ui.SelectElem.Id).then(function (response) {
+            _this.ui.SelectElem = null;
+            _this.ElementsLoad();
         });
     };
     MeshFileLoader.prototype.StartUploading = function () {
@@ -76,19 +95,26 @@ var MeshFileLoader = (function () {
         if (_this._HttpService) {
             _this._HttpService.get("/ElementEditor/GetElementList").then(function (response) {
                 console.log(response.data);
-                _this._MeshFileLoaderUI.ElementList = response.data;
+                _this.ui.ElementList = response.data;
             });
         }
     };
+    // If element = new elem id -> -1
+    // After save server return new id
     MeshFileLoader.prototype.ElementSave = function () {
         var _this = this;
         //{ 'data': JSON.stringify({ id: 0, sceneMap: "asdasd" }) }
         //$httpParamSerializer({param:val,secondParam:secondVal})
-        this._HttpService.post("/ElementEditor/ElementSave?", JSON.stringify({ id: _this.id, name: "Here must be element name", description: "Lem", sceneMap: _this._RenderPreview.GetSceneObjectMap() }))
+        this._HttpService.post("/ElementEditor/ElementSave?", JSON.stringify({
+            id: _this.id, name: _this.ui.nameElement,
+            description: _this.ui.descriptionElement,
+            sceneMap: _this._RenderPreview.GetSceneObjectMap()
+        }))
             .then(function (response) {
             if (response.data)
                 _this.id = parseInt(response.data);
         });
+        this.ElementsLoad();
     };
     MeshFileLoader.prototype.CompleteUploadFiles = function (isSuccess) {
         var _this = this;
@@ -96,7 +122,7 @@ var MeshFileLoader = (function () {
             var str = response.data;
             if (str != "") {
                 var strList = str.split('/');
-                _this._MeshFileLoaderUI.MeshList.push(strList[strList.length - 1]);
+                _this.ui.MeshList.push(strList[strList.length - 1]);
                 _this._RenderPreview._RenderEngineService.appendMeshIn(str);
             }
         });

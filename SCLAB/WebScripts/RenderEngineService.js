@@ -75,8 +75,11 @@ var B4WModule = (function () {
 }());
 var RenderEngineService = (function () {
     function RenderEngineService() {
+        this.ActiveTool = 1;
+        this.ActiveAxis = [true, false, false];
         this.MeshFileList = [];
         this.canvasId = "CanvasElementEditor";
+        this.childSelected = [];
         var _this = this;
         _this.EngineModules = new B4WModule();
         b4w.register("EngineB4W", function (exports, require) {
@@ -94,9 +97,9 @@ var RenderEngineService = (function () {
             _this.EngineModules.TransformModule = require("transform");
             _this.EngineModules.UtilitesModule = require("util");
             _this.EngineModules.QuaternionModule = require("quat");
-            console.log(_this.EngineModules.AppModule);
-            console.log(require("app"));
-            console.log(b4w.require("app"));
+            //console.log(_this.EngineModules.AppModule);
+            //console.log(require("app"));
+            //console.log(b4w.require("app"));
             var OUTLINE_COLOR_VALID = [0, 1, 0];
             var OUTLINE_COLOR_ERROR = [1, 0, 0];
             var FLOOR_PLANE_NORMAL = [0, 1, 0];
@@ -162,10 +165,15 @@ var RenderEngineService = (function () {
             }
             function main_canvas_down(e) {
                 _drag_mode = true;
+                _this.getCanvasPosition();
+                // clear real selected object
+                _this.childSelected.length = 0;
                 if (e.preventDefault)
                     e.preventDefault();
-                var x = _this.EngineModules.MouseModule.get_coords_x(e) - _this.canvasPositionX;
-                var y = _this.EngineModules.MouseModule.get_coords_y(e) - (_this.canvasPositionY - window.pageYOffset);
+                //canvas.classList.add('fullS');
+                var x = e.clientX - _this.canvasPositionX;
+                var y = e.clientY - (_this.canvasPositionY - window.pageYOffset);
+                //_this.EngineModules.MouseModule.get_coords_y(e)
                 var obj = _this.EngineModules.ScenesModule.pick_object(x, y);
                 // handling outline effect
                 if (_selected_obj != obj) {
@@ -174,6 +182,8 @@ var RenderEngineService = (function () {
                     if (obj)
                         _this.EngineModules.ScenesModule.apply_outline_anim(obj, 1, 1, 0);
                     _selected_obj = obj;
+                    if (_selected_obj)
+                        _this.SelectGroup(_selected_obj.elementId);
                 }
                 // calculate delta in viewport coordinates
                 if (_selected_obj) {
@@ -190,6 +200,7 @@ var RenderEngineService = (function () {
                 }
             }
             function main_canvas_up(e) {
+                _selected_obj = null;
                 _drag_mode = false;
                 // enable camera controls after releasing the object
                 if (!_enable_camera_controls) {
@@ -223,11 +234,95 @@ var RenderEngineService = (function () {
                             // do not process the parallel case and intersections behind the camera
                             //if (point && camera_ray[1] < 0) {
                             var obj_parent = _this.EngineModules.ObjectsModule.get_parent(_selected_obj);
+                            var moveX = e.movementX;
+                            var moveY = e.movementX;
+                            var value = moveX * moveX + moveY * moveY;
+                            value /= 1000;
+                            if (moveX < 0 || moveY < 0) {
+                                value *= -1;
+                            }
                             if (obj_parent && _this.EngineModules.ObjectsModule.is_armature(obj_parent))
                                 // translate the parent (armature) of the animated object
                                 _this.EngineModules.TransformModule.set_translation_v(obj_parent, point);
-                            else
-                                _this.EngineModules.TransformModule.set_translation_v(_selected_obj, point);
+                            else if (_this.childSelected.length != 0) {
+                                //let newPoint = require("vec3").create();
+                                //let objTrans = _this.EngineModules.TransformModule.get_translation(_selected_obj, newPoint);
+                                //_this.EngineModules.TransformModule.set_translation_v(_selected_obj, point);
+                                //let newPoint2 = require("vec3").create();
+                                //let objTrans2 = _this.EngineModules.TransformModule.get_translation(_selected_obj, newPoint2);
+                                //newPoint[0] -= newPoint2[0];
+                                //newPoint[1] -= newPoint2[1];
+                                //newPoint[2] -= newPoint2[2];
+                                for (var i = 0; i < _this.childSelected.length; i++) {
+                                    switch (_this.ActiveTool) {
+                                        // Translate
+                                        case 1:
+                                            var position = {};
+                                            _this.EngineModules.TransformModule.get_translation(_this.childSelected[i], position);
+                                            if (_this.ActiveAxis[0])
+                                                position[0] += value;
+                                            if (_this.ActiveAxis[1])
+                                                position[1] += value;
+                                            if (_this.ActiveAxis[2])
+                                                position[2] += value;
+                                            _this.EngineModules.TransformModule.set_translation_v(_this.childSelected[i], position);
+                                            break;
+                                        //Rotate
+                                        case 2:
+                                            if (_this.ActiveAxis[0])
+                                                _this.EngineModules.TransformModule.rotate_x_local(_this.childSelected[i], value);
+                                            if (_this.ActiveAxis[1])
+                                                _this.EngineModules.TransformModule.rotate_y_local(_this.childSelected[i], value);
+                                            if (_this.ActiveAxis[2])
+                                                _this.EngineModules.TransformModule.rotate_z_local(_this.childSelected[i], value);
+                                            break;
+                                        // Scale
+                                        case 3:
+                                            var curScale = _this.EngineModules.TransformModule.get_scale(_this.childSelected[i]);
+                                            _this.EngineModules.TransformModule.set_scale(_this.childSelected[i], curScale + value);
+                                            break;
+                                    }
+                                    //if (_this.childSelected[i] != _selected_obj)
+                                    //{
+                                    //	 let newPoint3 = require("vec3").create();
+                                    //	 let objTrans3 = _this.EngineModules.TransformModule.get_translation(_this.childSelected[i], newPoint3);
+                                    //	 newPoint3[0] -= newPoint[0];
+                                    //	 newPoint3[1] -= newPoint[1];
+                                    //	 newPoint3[2] -= newPoint[2];// + point[2];;
+                                    //	 _this.EngineModules.TransformModule.set_translation(_this.childSelected[i], newPoint3[0], newPoint3[1], newPoint3[2]);
+                                    //}
+                                }
+                            }
+                            else {
+                                switch (_this.ActiveTool) {
+                                    // Translate
+                                    case 1:
+                                        var position = {};
+                                        _this.EngineModules.TransformModule.get_translation(_selected_obj, position);
+                                        if (_this.ActiveAxis[0])
+                                            position[0] += value;
+                                        if (_this.ActiveAxis[1])
+                                            position[1] += value;
+                                        if (_this.ActiveAxis[2])
+                                            position[2] += value;
+                                        _this.EngineModules.TransformModule.set_translation_v(_selected_obj, position);
+                                        break;
+                                    //Rotate
+                                    case 2:
+                                        if (_this.ActiveAxis[0])
+                                            _this.EngineModules.TransformModule.rotate_x_local(_selected_obj, value);
+                                        if (_this.ActiveAxis[1])
+                                            _this.EngineModules.TransformModule.rotate_y_local(_selected_obj, value);
+                                        if (_this.ActiveAxis[2])
+                                            _this.EngineModules.TransformModule.rotate_z_local(_selected_obj, value);
+                                        break;
+                                    // Scale
+                                    case 3:
+                                        var curScale = _this.EngineModules.TransformModule.get_scale(_selected_obj);
+                                        _this.EngineModules.TransformModule.set_scale(_selected_obj, curScale + value);
+                                        break;
+                                }
+                            }
                             limit_object_position(_selected_obj);
                             //}
                         }
@@ -238,6 +333,15 @@ var RenderEngineService = (function () {
         });
         b4w.require("EngineB4W").init();
     }
+    RenderEngineService.prototype.SelectGroup = function (id) {
+        //console.log("id", id);
+        if (typeof id == "undefined")
+            return;
+        var objList = this.EngineModules.ScenesModule.get_all_objects("MESH");
+        for (var i = 0; i < objList.length; i++)
+            if (objList[i].elementId == id && this.EngineModules.ObjectsModule.is_dynamic(objList[i]))
+                this.childSelected.push(objList[i]);
+    };
     RenderEngineService.prototype.getCanvasPosition = function () {
         this.canvasPositionX = $("canvas").offset().left;
         this.canvasPositionY = $("canvas").offset().top;
@@ -251,11 +355,14 @@ var RenderEngineService = (function () {
         var _this = this;
         function loadcb() {
             if (i < fileNames.length) {
+                _this.MeshFileList.push(fileNames[i]);
                 _this.EngineModules.DataModule.load(fileNames[i], loadcb, null, null, false);
                 i++;
             }
-            else
+            else {
                 updateTransform();
+                _this.EngineModules.AppModule.enable_camera_controls();
+            }
         }
         _this.EngineModules.DataModule.load("/UsersData/Models3d/SystemFiles/defaultScene.json", loadcb, null, null, false);
     };

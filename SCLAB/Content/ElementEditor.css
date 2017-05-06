@@ -26,7 +26,7 @@
     padding-top: 10%;
     z-index: 3;
     margin-top: -20px;
-    animation: animUploadFilePanel 1s 1 alternate;
+    animation: animUploadFilePanel 1s 1 normal;
 }
 
 #ListElementPanel{
@@ -38,7 +38,10 @@
     padding-top: 10%;
     z-index: 5;
     margin-top: -20px;
-    animation: animUploadFilePanel 1s 1 alternate;
+}
+
+#ListElementPanel div{
+    animation: animUploadFilePanel 1s 1 normal;
 }
 
 #ListElementPanel > div > div > div.panel-body > div.col-lg-3.panel.panel-default,
@@ -246,17 +249,16 @@
 	 background-position:center;
 }
 .elementItem:hover {
-    animation: animElemEditor 1s 1 normal;
-    width: 8vh;
+    animation: animElemEditor 0.3s 10 alternate !important;
     background-size: cover;
 }
 @keyframes animElemEditor {
     from {
-        width: 7vh;
+        box-shadow: 0 0 0 rgba(255, 0, 0, 1);
     }
 
     to {
-        width: 8vh;
+        box-shadow: 0 0 10px rgba(255, 0, 0, 1);
     }
 }
 
@@ -336,4 +338,38 @@
     color: white;
     background-color: rgba(255, 255, 255, 0.50);
     border-color: aliceblue;
+}
+
+.fullS{
+	 padding: 0px;
+	 top:0px;
+	 left:0px!important;
+	 position:fixed;
+	 width:100vw;
+	 height:100vh;
+	 z-index:100;
+}
+
+.fullS canvas{
+	 padding: 0px;
+	 top:0px;
+	 left:0px!important;
+}
+#nameElement input{
+    background-color: rgba(255, 255, 255, 0.00);
+    border:none;
+    height:30px;
+    width:20vw;
+}
+    #nameElement input:hover, #nameElement input:focus {
+        background-color: rgba(255, 255, 255, 0.6);
+        border: 1px solid #3c763d;
+        border-radius: 5px;
+    }
+
+input, textarea {
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+    color: #3c763d !important;
+    //text-shadow: 1px 1px 2px white, 0 0 1em red;
+    
 }

@@ -1,5 +1,7 @@
 ﻿class MeshFileLoaderUI
 {
+	 public nameElement = "New element";
+	 public descriptionElement = "Description is empty";
 	 public showMeshUploadPanel: boolean;
 	 public showLestElementPanel: boolean;
 	 public MeshList: Array<string>;
@@ -27,21 +29,36 @@ class MeshFileLoader {
 	 private _HttpService: ng.IHttpService;
 	 private _HttpParamSerializer: ng.IHttpParamSerializer;
 
-	 private _MeshFileLoaderUI: MeshFileLoaderUI;
+	 private ui: MeshFileLoaderUI;
 
 	 public ElementOpen()
 	 {
+		  this.ui.MeshList.length = 0;
 		  let _this = this;
-		  _this._HttpService.get("/ElementEditor/GetElementById?id=" + _this._MeshFileLoaderUI.SelectElem.Id).then(function (response) {
-				_this._MeshFileLoaderUI.SelectElem = response.data;
+		  _this._HttpService.get("/ElementEditor/GetElementById?id=" + _this.ui.SelectElem.Id).then(function (response) {
+				_this.ui.SelectElem = response.data;
 
-				_this.id = _this._MeshFileLoaderUI.SelectElem.Id;
+				_this.id = _this.ui.SelectElem.Id;
+				_this.ui.nameElement = _this.ui.SelectElem.Name;
 
-				if (_this._MeshFileLoaderUI.SelectElem.JsonMapScene != undefined)
+				if (_this.ui.SelectElem.JsonMapScene != undefined)
 				{
-					 let tmp = JSON.parse(_this._MeshFileLoaderUI.SelectElem.JsonMapScene);//.objects;
-					 _this._RenderPreview.UpdatePositionInScene(tmp.objects, tmp.meshFiles );
+					 let tmp = JSON.parse(_this.ui.SelectElem.JsonMapScene);//.objects;
+					 _this._RenderPreview.UpdatePositionInScene(tmp.objects, tmp.meshFiles);
+					 for (let i = 0; i < tmp.meshFiles.length; i++) {
+						  let tmpStr = tmp.meshFiles[i].split("/");
+						  _this.ui.MeshList.push(tmpStr[tmpStr.length -1]);
+					 }
 				}
+		  });
+	 }
+
+	 public RemoveElement()
+	 {
+		  let _this = this;
+		  _this._HttpService.get("/ElementEditor/RemoveElementById?id=" + _this.ui.SelectElem.Id).then(function (response) {
+				_this.ui.SelectElem = null;
+				_this.ElementsLoad();
 		  });
 	 }
 
@@ -59,22 +76,30 @@ class MeshFileLoader {
 		  if (_this._HttpService) {
 				_this._HttpService.get("/ElementEditor/GetElementList").then(function (response: any) {
 					 console.log(response.data);
-					 _this._MeshFileLoaderUI.ElementList = response.data;
+					 _this.ui.ElementList = response.data;
 				});
 		  }
 
 	 }
 
+	 // If element = new elem id -> -1
+	 // After save server return new id
 	 public ElementSave()
 	 {
 		  let _this = this;
 		  //{ 'data': JSON.stringify({ id: 0, sceneMap: "asdasd" }) }
 		  //$httpParamSerializer({param:val,secondParam:secondVal})
-		  this._HttpService.post("/ElementEditor/ElementSave?", JSON.stringify({ id: _this.id, name: "Here must be element name", description:"Lem", sceneMap: _this._RenderPreview.GetSceneObjectMap() }))
+		  this._HttpService.post("/ElementEditor/ElementSave?",
+				JSON.stringify({
+					 id: _this.id, name: _this.ui.nameElement,
+					 description: _this.ui.descriptionElement,
+					 sceneMap: _this._RenderPreview.GetSceneObjectMap()
+		  }))
 				.then((response: any) => {
 					 if (response.data)
 						  _this.id = parseInt( response.data );
-		  });
+				});
+		  this.ElementsLoad();
 	 }
 
 	 private CompleteUploadFiles(isSuccess: boolean): void
@@ -85,7 +110,7 @@ class MeshFileLoader {
 
 				if (str != "") {
 					 let strList: string[] = str.split('/');
-					 _this._MeshFileLoaderUI.MeshList.push(strList[strList.length - 1]);
+					 _this.ui.MeshList.push(strList[strList.length - 1]);
 
 					 _this._RenderPreview._RenderEngineService.appendMeshIn( str );
 				}
@@ -93,7 +118,9 @@ class MeshFileLoader {
 	 }
 
 	 constructor(renderPreview: RenderPreview) {
+
 		  this._RenderPreview = renderPreview;
+		  
 
 		  let _this = this;
 		  this._MeshFileLoaderModule = angular.module('ElementEditor', ['angularFileUpload']);
@@ -102,14 +129,19 @@ class MeshFileLoader {
 				function ($scope: any, $http: ng.IHttpService, $httpParamSerializer: ng.IHttpParamSerializer, FileUploader: any) {
 
 					 // set def value
+					 $scope.RemoveElement = () => { _this.RemoveElement() };
+					 $scope.SetActiveTool = (tool: number) => { _this._RenderPreview._RenderEngineService.ActiveTool = tool; };
+					 $scope.SetActiveAxis = (axis: number) => { _this._RenderPreview.SetActiveAxis(axis) };
 					 $scope.StartUploading = () => { _this.StartUploading() };
 					 $scope.ElementSave = () => { _this.ElementSave(); };
 					 $scope.ElementOpen = () => { _this.ElementOpen(); };
 					 _this._HttpService = $http;
 					 _this._HttpParamSerializer = $httpParamSerializer;
 
-					 _this._MeshFileLoaderUI = new MeshFileLoaderUI();
-					 $scope.ui = _this._MeshFileLoaderUI;
+					 _this.ui = new MeshFileLoaderUI();
+					 $scope.ui = _this.ui;
+
+					 //_this.ui.MeshList = _this._RenderPreview._RenderEngineService.MeshFileList;
 
 					 _this._FileUploader = $scope.uploader = new FileUploader({ url: '/ElementEditor/UploadModelFile' });
 
@@ -143,6 +175,8 @@ class MeshFileLoader {
 
 					 _this._FileUploader.onCompleteAll = () => { _this.CompleteUploadFiles(true); };
 				}]);
+
+		  
 
 		  setTimeout(() => { _this.ElementsLoad() }, 200 );
 	 }

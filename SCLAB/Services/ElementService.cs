@@ -41,5 +41,11 @@ namespace SCLAB.Services
 		  {
 				return _ElementRepository.UpdatElement( element );
 		  }
+
+		  public void RemoveElmentById(int id)
+		  {
+				var element = _ElementRepository.GetElementById(id);
+				_ElementRepository.DeleteElement(element);
+		  }
 	 }
 }

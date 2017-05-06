@@ -33,6 +33,14 @@ namespace SCLAB.Controllers
 					 return Content("");
 		  }
 
+		  [HttpGet]
+		  public ActionResult RemoveElementById( int? id )
+		  {
+				if ( id != null )
+					 _ElementService.RemoveElmentById( ( int )id );
+				return Content( "OK" );
+		  }
+
 		  [HttpPost]
 		  public ActionResult UploadModelFile( HttpPostedFileBase file )
 		  {

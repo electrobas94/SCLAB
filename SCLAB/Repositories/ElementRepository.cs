@@ -56,7 +56,8 @@ namespace SCLAB.Repositories
 
 		  public void DeleteElement( ElementModel element )
 		  {
-				throw new NotImplementedException();
+				db.Entry( element ).State = EntityState.Deleted;
+				db.SaveChanges();
 		  }
 
 		  public ElementModel GetElementById( int id )

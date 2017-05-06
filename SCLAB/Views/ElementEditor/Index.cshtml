@@ -5,6 +5,7 @@
 .
 
 
+
 <div class="row" ng-app="ElementEditor" ng-controller="MeshLoaderController">
     @Html.Partial("MeshLoadPanel")
     @Html.Partial( "ElementListPanel" )
@@ -15,9 +16,9 @@
                     <div class="col-lg-12">
                         <div class="btn-toolbar btnToolbarBig pull-right">
                             <div class="btn-group-vertical">
-                                <button type="button" class="btn btn-success btn-lg btnAnimIncrease"><span class="glyphicon glyphicon-file"></span> New</button>
+                                <button type="button" class="btn btn-success btn-lg btnAnimIncrease" onclick="window.location = '/ElementEditor'"><span class="glyphicon glyphicon-file"></span> New</button>
                                 <button type="button" class="btn btn-info btn-lg btnAnimIncrease" ng-click="ui.showLestElementPanel=true"><span class="glyphicon glyphicon-folder-open"></span> Open</button>
-                                <button type="button" class="btn btn-warning btn-lg btnAnimIncrease" ng-click="ElementSave()">
+                                <button type="button" class="btn btn-warning btn-lg btnAnimIncrease" ng-click="ElementSave();">
                                     <span class="glyphicon glyphicon-floppy-saved"></span> Save
                                 </button>
 
@@ -31,7 +32,7 @@
                                 <div class="col-sm-9">
                                     <div style="display:inline-block">
                                         <div id="nameElement">
-                                            Name Element: <span contenteditable="true">{{ui.SelectElem.Name}}</span>
+                                            Name Element: <input ng-model="ui.nameElement" />
                                         </div>
                                         <div id="typeElement">
                                             Type Element:
@@ -74,9 +75,16 @@
                         <div class="panel panel-default">
                             <div class="panel-body canvasElementEditor" id="CanvasElementEditor">
                                 <div class="btn-group" id="buttonCanvas">
-                                    <button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-move"></span> Move</button>
-                                    <button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-refresh"></span> Rotate</button>
-                                    <button type="button" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-fullscreen"></span> Scale</button>
+                                    <button type="button" class="btn btn-default btn-xs" ng-click="SetActiveTool(1)"><span class="glyphicon glyphicon-move"></span> Move</button>
+                                    <button type="button" class="btn btn-default btn-xs" ng-click="SetActiveTool(2)"><span class="glyphicon glyphicon-refresh"></span> Rotate</button>
+                                    <button type="button" class="btn btn-default btn-xs" ng-click="SetActiveTool(3)"><span class="glyphicon glyphicon-fullscreen"></span> Scale</button>
+
+                                    <button type="button" class="btn btn-default btn-xs" ng-click="SetActiveAxis(1)">X</button>
+                                    <button type="button" class="btn btn-default btn-xs" ng-click="SetActiveAxis(2)">Y</button>
+                                    <button type="button" class="btn btn-default btn-xs" ng-click="SetActiveAxis(3)">Z</button>
+
+                                    <button type="button" class="btn btn-default btn-xs" 
+														  onclick="let canvas = document.getElementById('CanvasElementEditor'); if (canvas.classList.contains('fullS')) canvas.classList.remove('fullS'); else canvas.classList.add('fullS'); canvas.style = ''; window.onresize();">FullScreen</button>
                                 </div>
                             </div>
                         </div>
@@ -139,6 +147,33 @@
         </div>
     </div>
 </div>
+
+<script>
+	 document.addEventListener("keypress", (e) => {
+	 	 _ElementEditor._RenderPreview.SetActiveAxis(0);
+	 	 if (e.key == "X") {
+	 	 	 _ElementEditor._RenderPreview.SetActiveAxis(2);
+	 	 	 _ElementEditor._RenderPreview.SetActiveAxis(3);
+	 	 }
+	 	 if (e.key == "Y") {
+	 	 	 _ElementEditor._RenderPreview.SetActiveAxis(1);
+	 	 	 _ElementEditor._RenderPreview.SetActiveAxis(3);
+	 	 }
+	 	 if (e.key == "Z") {
+	 	 	 _ElementEditor._RenderPreview.SetActiveAxis(1);
+	 	 	 _ElementEditor._RenderPreview.SetActiveAxis(2);
+	 	 }
+
+	 	 //console.log(e.key, e.keyCode);
+	 	 if (e.key == "x")
+	 	 	 _ElementEditor._RenderPreview.SetActiveAxis(1);
+	 	 if (e.key == "y")
+	 	 	 _ElementEditor._RenderPreview.SetActiveAxis(2);
+	 	 if (e.key == "z")
+	 	 	 _ElementEditor._RenderPreview.SetActiveAxis(3);
+	 });
+
+</script>
 
 @Scripts.Render("~/bundles/blender")
 @Scripts.Render("~/bundles/angular")

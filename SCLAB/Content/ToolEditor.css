@@ -13,8 +13,18 @@
     margin-left: 0px;
     padding-left:0;
 }
+.btnTool {
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+}
+.btnToolActive {
+    color: #fff;
+    background-color: #428bca;
+    border-color: #357ebd;
+}
 .tab-pane .row {
-    height: 81vh;
+    height: 89vh;
 }
 
 .h100p{
@@ -33,29 +43,48 @@ canvas
 {
 }
 
-.ElementItem:hover {
-	 border-color:red;
+.toolEditorNavBar {
+    border-bottom: 1px solid #dff0d8;
+    text-align: center;
+    background-color: #f7fbf6;
+}
+.toolEditorNavBar > li.active > a {
+    color: #3c763d !important;
+    background-color: #dff0d8 !important;
+    border-color: #d6e9c6 !important;
+    font-size: 16px;
+    font-weight: bold;
+    border-bottom:none;
+}
+.toolEditorNavBar > li > a {
+    color: #3c763d !important;
+    background-color: #f0faed;
+    margin-right: -5px;
+}
+.toolEditorNavBar > li {
+    width: 200px;
+    display: inline-block;
+    float: none;
+}
+#elementItemDescription {
+    display:none;
+    border: 1px solid #dff0d8;
+    z-index:100;
+    position: absolute;
+    margin: 44vh 0 0 45vw;
+    width: 30%;
+    height:auto;
+	 transition-property:display;
+	 transition-duration:1s;
+     z-index:200;
 }
 
-.ElementItem{
-	 cursor:pointer;
-	 border: 1px solid black;
-	 border-radius:2px;
-	 margin:0.4vh;
-	 display:inline-block;
-	 height:4vh;
-	 width:4vh;
-	 background-image:url(/Content/images/download.png);
-	 background-size:contain;
-	 background-repeat:no-repeat;
+#elementItemList {
+    text-align:center;
+    overflow-y: auto;
+    height: 100%;
+    max-height:40vh;
 }
-
-.ElementItem span
-{
-	 display:block;
-	 width:4vh;
-	 white-space:pre;
-	 height:2vh;
-	 overflow-x:hidden;
-	 overflow-y:hidden;
+.pressedItem {
+    box-shadow: 0 0 10px rgba(255, 0, 0, 1);
 }
